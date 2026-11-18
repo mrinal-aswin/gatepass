@@ -2,6 +2,10 @@
 
 All notable changes to this plugin. Versions follow `.claude-plugin/plugin.json`.
 
+## 1.0.1 (2026-11-18)
+
+- Licensed under MIT (`LICENSE`, and `license` in `plugin.json`).
+
 ## 1.0.0 (2026-11-18)
 
 First release as a Claude Code plugin.

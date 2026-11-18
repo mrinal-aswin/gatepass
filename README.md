@@ -116,3 +116,7 @@ tools/build-skill-zip.sh          builds the claude.ai upload
 3. After merging, tag the release: `git tag v1.2.0 && git push origin v1.2.0`.
 
 Users who want a fixed version can add the marketplace at a tag: `mrinal-aswin/resume-pipeline#v1.0.0`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
