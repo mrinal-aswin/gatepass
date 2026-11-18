@@ -54,7 +54,8 @@ p { text-wrap: pretty; }
 .sec-head { max-width: 680px; display: grid; gap: 14px; margin-bottom: 44px; }
 .sec-head h2 { font: 800 clamp(32px, 4.6vw, 54px)/1.02 var(--f-display); letter-spacing: -.025em; }
 .sec-head p { margin: 0; color: var(--ink-2); font-size: 18px; }
-section.block { padding-block: clamp(80px, 12vw, 140px); }
+section.block { padding-block: clamp(80px, 12vw, 140px); scroll-margin-top: 0; }
+.journey { scroll-margin-top: 0; }
 
 /* Nav */
 .nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
@@ -94,7 +95,7 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .cmd button { flex: 0 0 auto; font: 600 13px/1 var(--f-body); padding: 9px 16px; border-radius: 999px; border: 0; background: #a9bcf2; color: #0e1530; cursor: pointer; }
 .cmd button:hover { background: #c3d0f6; }
 @media (prefers-color-scheme: dark) { .closing .cmd, .hero .cmd { box-shadow: 0 0 0 1px var(--rule); } }
-.cmd button.done { background: var(--green); border-color: var(--green); color: #fff; }
+.cmd button.done, .prompt button.done { background: #8ccf8f; color: #10260f; }
 .cmds { display: grid; gap: 8px; }
 
 /* The case: a pinned stage where one resume sheet is stamped through eight gates */
@@ -279,7 +280,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
 
 /* Entrance states are set only when scripts run, so the page reads fine without them */
 .js .reveal { opacity: 0; }
-.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 999px; font-size: 14px; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 50; }
+.toast { position: fixed; left: 50%; top: 76px; transform: translate(-50%, -12px); background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 999px; font-size: 14px; opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 50; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 </style>
 </head>
@@ -579,7 +580,17 @@ addEventListener("scroll", () => {
 
 // Motion: only with GSAP loaded and motion allowed. Otherwise the gates show as a plain list and nothing is hidden.
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-function noMotion() { document.documentElement.classList.add("no-pin"); }
+function noMotion() { document.documentElement.classList.add("no-pin"); landOnHash(); }
+// A link to a section (#start) must land there even though fonts and the pinned story change the layout after the
+// browser's own jump. Re-aim once everything is laid out.
+function landOnHash() {
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (!target) return;
+  document.fonts.ready.then(() => requestAnimationFrame(() => {
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    target.scrollIntoView({ behavior: "instant", block: "start" });
+  }));
+}
 window.addEventListener("load", () => {
   if (calm || !window.gsap || !window.ScrollTrigger) return noMotion();
   gsap.registerPlugin(ScrollTrigger);
@@ -621,6 +632,7 @@ window.addEventListener("load", () => {
   once("#sayGrid .turn", { y: 14, opacity: 0, duration: .45, stagger: .09, ease: "power2.out" }, "#sayGrid");
   once(".step", { x: -30, opacity: 0, duration: .6, stagger: .1, ease: "power3.out" }, ".steps");
   once(".closing h2", { yPercent: 30, opacity: 0, duration: .9, ease: "expo.out" });
+  landOnHash();
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
