@@ -59,11 +59,15 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 /* Nav */
 .nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid transparent; transition: border-color .2s; }
 .nav.scrolled { border-bottom-color: var(--rule); }
+.nav.on-dark { background: rgba(31, 26, 20, .92); border-bottom-color: rgba(244, 239, 228, .12); }
+.nav.on-dark .brand, .nav.on-dark nav a { color: #f4efe4; }
+.nav.on-dark .brand i { border-color: #f4efe4; }
+.nav.on-dark .btn { border-color: #f4efe4; color: #f4efe4; }
 .nav .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
 .brand { font: 600 15px/1 var(--f-mono); color: var(--ink); text-decoration: none; display: inline-flex; gap: 10px; align-items: center; }
 .brand i { width: 18px; height: 22px; border: 2px solid var(--ink); border-radius: 2px 6px 2px 2px; position: relative; display: inline-block; }
 .brand i::after { content: ""; position: absolute; left: 3px; right: 3px; top: 5px; height: 2px; background: var(--accent); box-shadow: 0 5px 0 var(--ink-2), 0 10px 0 var(--ink-2); }
-.nav nav { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+.nav nav { display: flex; gap: 22px; margin-left: auto; font-size: 15px; align-items: center; }
 .nav nav a { color: var(--ink-2); text-decoration: none; }
 .nav nav a:hover { color: var(--ink); }
 .btn { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1 var(--f-body); padding: 12px 18px; border-radius: 999px; text-decoration: none; border: 1.5px solid var(--ink); color: var(--ink); background: transparent; cursor: pointer; transition: transform .15s, background .15s; }
@@ -73,7 +77,7 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 @media (max-width: 720px) { .nav nav a:not(.btn) { display: none; } }
 
 /* Hero: one object in the middle of open paper */
-.hero { text-align: center; padding-block: clamp(56px, 9vw, 110px) 0; }
+.hero { text-align: center; padding-block: clamp(44px, 7vw, 84px) 0; }
 .hero .eyebrow { display: inline-block; margin-bottom: 22px; }
 .hero h1 { font: 800 clamp(44px, 8.4vw, 112px)/.94 var(--f-display); letter-spacing: -.04em; max-width: 13ch; margin: 0 auto; }
 .hero h1 em { font-style: normal; color: var(--accent); position: relative; white-space: nowrap; }
@@ -87,15 +91,15 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .cmd code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
 .cmd code::-webkit-scrollbar { display: none; }
 .cmd code::before { content: "$ "; opacity: .45; }
-.cmd button { flex: 0 0 auto; font: 600 12.5px/1 var(--f-body); padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(244, 239, 228, .35); background: transparent; color: #f4efe4; cursor: pointer; }
-.cmd button:hover { background: rgba(244, 239, 228, .14); }
+.cmd button { flex: 0 0 auto; font: 600 13px/1 var(--f-body); padding: 9px 16px; border-radius: 999px; border: 0; background: #a9bcf2; color: #0e1530; cursor: pointer; }
+.cmd button:hover { background: #c3d0f6; }
 @media (prefers-color-scheme: dark) { .closing .cmd, .hero .cmd { box-shadow: 0 0 0 1px var(--rule); } }
 .cmd button.done { background: var(--green); border-color: var(--green); color: #fff; }
 .cmds { display: grid; gap: 8px; }
 
 /* The case: a pinned stage where one resume sheet is stamped through eight gates */
-.journey { position: relative; height: 520vh; }
-.stage { position: sticky; top: 60px; height: calc(100vh - 60px); padding-left: var(--gutter); padding-right: max(20px, env(safe-area-inset-right, 0px)); max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(24px, 5vw, 72px); }
+.journey { position: relative; height: 480vh; margin-top: clamp(24px, 4vw, 48px); }
+.stage { position: sticky; top: 60px; padding-top: clamp(16px, 4vh, 48px); padding-bottom: 24px; padding-left: var(--gutter); padding-right: max(20px, env(safe-area-inset-right, 0px)); max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: clamp(24px, 5vw, 72px); }
 .sheet-wrap { justify-self: end; perspective: 1200px; width: min(540px, 100%); }
 .sheet .body { min-width: 0; }
 .sheet { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 118px; gap: 0 22px; background: var(--sheet); border-radius: 4px; box-shadow: var(--lift), 0 0 0 1px var(--rule); padding: 34px 26px 40px 34px; transform-origin: 50% 40%; font-size: 12px; line-height: 1.5; color: var(--ink); }
@@ -115,8 +119,9 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .stamps .lbl { font: 600 9.5px/1 var(--f-mono); letter-spacing: .14em; color: var(--ink-2); margin-bottom: 2px; }
 .stampmark { position: relative; align-self: flex-start; font: 700 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--stamp); border: 2.5px solid var(--stamp); border-radius: 6px; padding: 7px 10px; opacity: 0; mix-blend-mode: multiply; white-space: nowrap; }
 @media (prefers-color-scheme: dark) { .stampmark { mix-blend-mode: normal; } }
-.stampmark.big { position: absolute; left: 50%; top: 58%; font-size: 30px; padding: 12px 20px; border-width: 4px; color: var(--green); border-color: var(--green); background: color-mix(in srgb, var(--sheet) 70%, transparent); }
-.story { display: grid; gap: 26px; max-width: 460px; }
+.stampmark.big { position: absolute; left: 36%; top: auto; bottom: 16px; font-size: 46px; letter-spacing: .14em; padding: 12px 24px; border-width: 5px; border-radius: 10px; color: var(--green); border-color: var(--green); background: color-mix(in srgb, var(--sheet) 55%, transparent); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--green) 25%, transparent); }
+.sheet { padding-bottom: 138px; }
+.story { display: grid; gap: 26px; max-width: 460px; padding-top: clamp(20px, 8vh, 90px); }
 .rail { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
 .rail li { display: grid; gap: 6px; justify-items: center; }
 .rail .dot { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 var(--f-mono); border: 2px solid var(--rule); color: var(--ink-2); background: var(--paper); transition: background .25s, border-color .25s, color .25s; }
@@ -130,7 +135,7 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .cap p { color: var(--ink-2); margin: 12px 0 0; font-size: 17px; }
 .skip { font-size: 14px; color: var(--ink-2); }
 @media (max-width: 860px) {
-  .journey { height: 440vh; }
+  .journey { height: 400vh; }
   .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-content: start; gap: 18px; padding-top: 30px; }
   .sheet-wrap { justify-self: center; width: min(300px, 78vw); }
   .sheet { padding: 22px 22px 26px; font-size: 10px; }
@@ -140,8 +145,9 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
   .stamps { flex-direction: row; flex-wrap: wrap; gap: 6px; border-left: 0; border-top: 1.5px dashed var(--rule); padding: 12px 0 0; margin-top: 12px; }
   .stamps .lbl { width: 100%; }
   .stampmark { font-size: 9.5px; padding: 4px 6px; border-width: 2px; }
-  .stampmark.big { font-size: 20px; padding: 8px 12px; top: 46%; }
-  .story { max-width: none; gap: 14px; }
+  .stampmark.big { font-size: 26px; padding: 8px 14px; border-width: 3.5px; left: 50%; bottom: 14px; }
+  .sheet { padding-bottom: 78px; }
+  .story { max-width: none; gap: 14px; padding-top: 0; }
   .rail .dot { width: 28px; height: 28px; font-size: 10px; }
   .captions { min-height: 170px; }
   .cap h3 { font-size: 26px; }
@@ -199,7 +205,9 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .donext .seg { font: 500 12px var(--f-body); color: var(--ink-2); background: var(--tint); border-radius: 7px; padding: 5px 9px; white-space: nowrap; }
 @media (max-width: 760px) { .gates { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 14px; } .gates::before { display: none; } .donext .seg { display: none; } .donext div { grid-template-columns: 24px minmax(0, 1fr); } }
 .dash-note { font-size: 14px; color: var(--ink-2); margin-top: 14px; }
-.tabs-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 24px 36px; margin-top: 48px; }
+.tabs-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 40px; margin-top: 48px; }
+@media (max-width: 860px) { .tabs-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .tabs-list { grid-template-columns: minmax(0, 1fr); } }
 .tabs-list h3 { font: 700 18px/1.2 var(--f-display); }
 .tabs-list p { margin: 6px 0 0; color: var(--ink-2); font-size: 15.5px; }
 
@@ -215,11 +223,16 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .lens-note { font-size: 14px; color: var(--ink-2); margin-top: 18px; }
 
 /* Say this */
-.say { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
-.say div { border: 1px solid var(--rule); border-radius: var(--r); padding: 18px 20px; background: var(--sheet); }
-.say b { display: block; font: 500 17px/1.4 var(--f-serif); }
-.say span { display: block; margin-top: 8px; font-size: 14.5px; color: var(--ink-2); }
-
+.chat { background: #1f1a14; color: #f4efe4; border-radius: 14px; padding: clamp(18px, 3vw, 30px); box-shadow: var(--lift); max-width: 880px; }
+.chat .bar { display: flex; gap: 8px; align-items: center; font: 500 12.5px var(--f-mono); color: rgba(244, 239, 228, .55); margin-bottom: 18px; }
+.chat .bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(244, 239, 228, .2); }
+.chat .bar span { margin-left: 8px; }
+.turn { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 4px 12px; padding: 14px 0; border-top: 1px solid rgba(244, 239, 228, .1); }
+.turn:first-of-type { border-top: 0; }
+.turn::before { content: ">"; font: 600 16px/1.5 var(--f-mono); color: #a9bcf2; }
+.turn b { font: 500 18px/1.45 var(--f-serif); color: #f4efe4; }
+.turn span { grid-column: 2; font-size: 15px; color: rgba(244, 239, 228, .68); }
+.turn span::before { content: "\2192\00a0"; color: #8ccf8f; }
 /* Start: steps */
 .start-band { --band: #1f1a14; --band-ink: #f4efe4; --band-accent: #a9bcf2; background: var(--band); color: var(--band-ink); }
 .start-band .sec-head p, .start-band .step p { color: color-mix(in srgb, var(--band-ink) 76%, transparent); }
@@ -230,7 +243,11 @@ section.block { padding-block: clamp(80px, 12vw, 140px); }
 .step h3 { font: 700 24px/1.2 var(--f-display); }
 .step p { margin: 8px 0 14px; max-width: 64ch; }
 .step .cmd { background: color-mix(in srgb, var(--band-ink) 10%, transparent); color: var(--band-ink); max-width: 640px; }
-.step .cmd button { color: var(--band-ink); border-color: color-mix(in srgb, var(--band-ink) 35%, transparent); }
+
+.prompt { display: flex; align-items: center; gap: 14px; max-width: 640px; }
+.step .cmd-label { font: 600 11px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--band-accent); margin: 0 0 8px; }
+.prompt blockquote { flex: 1; min-width: 0; }
+.prompt button { flex: 0 0 auto; font: 600 13px/1 var(--f-body); padding: 9px 16px; border-radius: 999px; border: 0; background: #a9bcf2; color: #0e1530; cursor: pointer; }
 .step blockquote { margin: 0; padding: 14px 18px; border-left: 3px solid var(--band-accent); background: color-mix(in srgb, var(--band-ink) 7%, transparent); border-radius: 0 8px 8px 0; font: 500 17px/1.45 var(--f-serif); max-width: 640px; }
 .step .os { font-size: 14px; margin-top: 10px; color: color-mix(in srgb, var(--band-ink) 70%, transparent); }
 .step p code, .step .os code { font: 500 13.5px var(--f-mono); background: color-mix(in srgb, var(--band-ink) 12%, transparent); padding: 1px 6px; border-radius: 5px; }
@@ -416,13 +433,14 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
         <span class="eyebrow">Just say it</span>
         <h2>Plain words. No commands to learn.</h2>
       </div>
-      <div class="say" id="sayGrid">
-        <div><b>"I have a new resume."</b><span>Stores it, shows what changed, and updates only what that affects.</span></div>
-        <div><b>"My LinkedIn changed."</b><span>Re-reads your profile, checks each fix you made, and re-scores it.</span></div>
-        <div><b>"Tailor my resume to this job."</b><span>Paste the ad. You get a tailored resume and an honest list of gaps.</span></div>
-        <div><b>"Write a cover letter for this job."</b><span>A letter built from the same facts as the resume.</span></div>
-        <div><b>"This week: 8 applications, 2 replies."</b><span>Logged to your funnel, which says where you're losing applications.</span></div>
-        <div><b>"My teammate wants to prepare for senior roles."</b><span>A separate pack for them, once they've agreed.</span></div>
+      <div class="chat" id="sayGrid">
+        <div class="bar"><i></i><i></i><i></i><span>~/job-search &middot; claude</span></div>
+        <div class="turn"><b>&ldquo;I have a new resume.&rdquo;</b><span>Stores it, shows what changed, and updates only what that affects.</span></div>
+        <div class="turn"><b>&ldquo;My LinkedIn changed.&rdquo;</b><span>Re-reads your profile, checks each fix you made, and re-scores it.</span></div>
+        <div class="turn"><b>&ldquo;Tailor my resume to this job.&rdquo;</b><span>Paste the ad. You get a tailored resume and an honest list of gaps.</span></div>
+        <div class="turn"><b>&ldquo;Write a cover letter for this job.&rdquo;</b><span>A letter built from the same facts as the resume.</span></div>
+        <div class="turn"><b>&ldquo;This week: 8 applications, 2 replies.&rdquo;</b><span>Logged to your funnel, which shows where you're losing applications.</span></div>
+        <div class="turn"><b>&ldquo;My teammate wants to prepare for senior roles.&rdquo;</b><span>A separate pack for them, once they've agreed.</span></div>
       </div>
     </div>
   </section>
@@ -448,15 +466,19 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
           <div class="cmds">
             <div class="cmd"><code>mkdir -p ~/job-search &amp;&amp; cd ~/job-search &amp;&amp; claude</code><button type="button" data-copy>Copy</button></div>
           </div>
-          <p class="os">If it asks whether you trust this folder, choose Yes. You're ready when you see a box to type in. On Windows PowerShell: <code>mkdir $HOME\job-search; cd $HOME\job-search; claude</code></p></div></li>
+          <p class="os">If it asks whether you trust this folder, choose Yes. You're ready when you see a box to type in. On Windows, use this in PowerShell instead:</p>
+          <div class="cmds"><div class="cmd"><code>mkdir $HOME\job-search; cd $HOME\job-search; claude</code><button type="button" data-copy>Copy</button></div></div></div></li>
         <li class="step"><div><h3>Let Claude check your computer</h3>
-          <blockquote>Check the resume-pipeline setup and help me install anything that's missing.</blockquote>
+          <p class="cmd-label">Type this to Claude</p>
+          <div class="prompt"><blockquote>Check the resume-pipeline setup and help me install anything that's missing.</blockquote><button type="button" data-copy>Copy</button></div>
           <p>It looks for five things (Python, pandoc, poppler, a Chrome-family browser and SQLite) and helps you install what's missing. Claude asks before it runs anything; choose Yes to let it. You're set when it says <b>Ready</b>.</p></div></li>
         <li class="step"><div><h3>Build your pack</h3>
-          <blockquote>Build my job-search pack.</blockquote>
+          <p class="cmd-label">Type this to Claude</p>
+          <div class="prompt"><blockquote>Build my job-search pack.</blockquote><button type="button" data-copy>Copy</button></div>
           <p>Then add your resume: drag the file into the window (in Terminal this pastes its location) and press Enter. Claude asks a few questions, one at a time: whose profile it is, your LinkedIn, the jobs and cities you want, and how to handle missing details. It's done when it says your pack is ready.</p></div></li>
         <li class="step"><div><h3>Open your dashboard</h3>
-          <blockquote>Start my dashboard.</blockquote>
+          <p class="cmd-label">Type this to Claude</p>
+          <div class="prompt"><blockquote>Start my dashboard.</blockquote><button type="button" data-copy>Copy</button></div>
           <p>Open the link it gives you, usually <code>http://127.0.0.1:8765</code>. Keep Terminal open while you use it; closing it stops the dashboard. Start with Do next.</p></div></li>
       </ol>
     </div>
@@ -527,11 +549,13 @@ const GATES = [
 const SPOTS = [[58, 8, -8], [6, 30, 5], [52, 42, -4], [10, 58, 7], [55, 64, -9], [8, 80, 4], [46, 84, -6], [24, 38, 3]];
 
 const $ = (s) => document.querySelector(s);
+const STAMPS = [];  // in gate order, which is not DOM order: the offer stamp sits outside the margin column
 const el = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
 GATES.forEach(([id, name, stamp, title, body], i) => {
   const li = el("li"); li.append(el("span", "dot", id)); $("#rail").append(li);
   const cap = el("div", "cap"); cap.append(el("span", "g", `${id} &middot; ${name}`), el("h3", null, title), el("p", null, body)); $("#captions").append(cap);
   const s = el("span", "stampmark" + (i === 6 ? " big" : ""), stamp);
+  STAMPS.push(s);
   s.dataset.rot = SPOTS[i][2];
   (i === 6 ? $("#sheet") : $("#stamps")).append(s);
   const a = el("article"); a.append(el("span", "g", `${id} &middot; ${name}`), el("h3", null, title), el("p", null, body)); $("#staticGates").append(a);
@@ -541,13 +565,17 @@ $("#rail").firstElementChild.classList.add("now");
 // Copy buttons
 const toast = (msg) => { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1600); };
 document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", async () => {
-  const text = b.previousElementSibling.textContent.trim();
+  const text = b.previousElementSibling.textContent.trim();  // the code or prompt beside the button
   try { await navigator.clipboard.writeText(text); }
   catch (e) { const r = document.createRange(); r.selectNodeContents(b.previousElementSibling); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected: press Cmd+C or Ctrl+C"); return; }
   b.textContent = "Copied"; b.classList.add("done"); toast("Copied. Paste it into Terminal.");
   setTimeout(() => { b.textContent = "Copy"; b.classList.remove("done"); }, 1800);
 }));
-addEventListener("scroll", () => $("#nav").classList.toggle("scrolled", scrollY > 8), { passive: true });
+addEventListener("scroll", () => {
+  $("#nav").classList.toggle("scrolled", scrollY > 8);
+  const b = $("#start").getBoundingClientRect();  // the nav turns dark while it sits over the dark band
+  $("#nav").classList.toggle("on-dark", b.top <= 60 && b.bottom > 60);
+}, { passive: true });
 
 // Motion: only with GSAP loaded and motion allowed. Otherwise the gates show as a plain list and nothing is hidden.
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -562,8 +590,8 @@ window.addEventListener("load", () => {
   gsap.fromTo("#headline em", { "--u": 0 }, { "--u": 1, duration: .8, delay: .5, ease: "power3.out" });
 
   // The case: one sheet, pinned, stamped gate by gate. Scrubbed to scroll, so scrolling back reverses it.
-  const stamps = gsap.utils.toArray(".stampmark"), caps = gsap.utils.toArray(".cap"), dots = gsap.utils.toArray("#rail li");
-  gsap.set(stamps, { scale: 2.2, opacity: 0, rotation: (i, t) => +t.dataset.rot - 14, xPercent: (i, t) => (t.classList.contains("big") ? -50 : 0), yPercent: (i, t) => (t.classList.contains("big") ? -50 : 0) });
+  const stamps = STAMPS, caps = gsap.utils.toArray(".cap"), dots = gsap.utils.toArray("#rail li");
+  gsap.set(stamps, { scale: (i, t) => (t.classList.contains("big") ? 3 : 2.2), opacity: 0, rotation: (i, t) => +t.dataset.rot - 14, xPercent: (i, t) => (t.classList.contains("big") ? -50 : 0), yPercent: (i, t) => (t.classList.contains("big") ? -50 : 0) });
   const tl = gsap.timeline({ scrollTrigger: { trigger: ".journey", start: "top top", end: "bottom bottom", scrub: .6,
     onUpdate: (st) => {
       const k = Math.min(GATES.length - 1, Math.floor(st.progress * GATES.length * 1.02));
@@ -572,7 +600,9 @@ window.addEventListener("load", () => {
   tl.fromTo("#sheet", { scale: .78, rotation: -5, y: 40 }, { scale: 1, rotation: 0, y: 0, duration: 1, ease: "none" }, 0);
   GATES.forEach((g, i) => {
     const at = i + .35;
-    tl.to(stamps[i], { scale: 1, opacity: .9, rotation: +stamps[i].dataset.rot, duration: .22, ease: "back.out(2.4)" }, at);
+    const big = i === 6;
+    tl.to(stamps[i], { scale: 1, opacity: big ? .95 : .9, rotation: +stamps[i].dataset.rot, duration: big ? .3 : .22, ease: big ? "back.out(3.2)" : "back.out(2.4)" }, at);
+    if (big) tl.to("#sheet", { y: 6, duration: .06, yoyo: true, repeat: 1, ease: "power2.out" }, at + .12);
     if (i > 0) {
       tl.to(caps[i - 1], { opacity: 0, y: -14, duration: .2 }, at - .25);
       tl.fromTo(caps[i], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .25 }, at - .05);
@@ -588,7 +618,7 @@ window.addEventListener("load", () => {
   once("#donext > div", { x: -24, opacity: 0, duration: .5, stagger: .08, ease: "power3.out" }, "#donext");
   once(".gates > div", { scale: .5, opacity: 0, duration: .45, stagger: .05, ease: "back.out(2)" }, ".gates");
   once(".lens", { y: 40, opacity: 0, rotation: (i) => (i % 2 ? 2 : -2), duration: .7, stagger: .08, ease: "back.out(1.3)" }, "#lensGrid");
-  once("#sayGrid > div", { y: 20, opacity: 0, duration: .5, stagger: .05, ease: "power2.out" }, "#sayGrid");
+  once("#sayGrid .turn", { y: 14, opacity: 0, duration: .45, stagger: .09, ease: "power2.out" }, "#sayGrid");
   once(".step", { x: -30, opacity: 0, duration: .6, stagger: .1, ease: "power3.out" }, ".steps");
   once(".closing h2", { yPercent: 30, opacity: 0, duration: .9, ease: "expo.out" });
 });
