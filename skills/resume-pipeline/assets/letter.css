@@ -1,0 +1,10 @@
+/* Print styles for cover letters. Same face and margins as resume.css so the two read as one set. */
+@page { size: A4; margin: 18mm 20mm; }
+body { font-family: "Calibri", "Carlito", "Arial", sans-serif; font-size: 11pt; line-height: 1.45; color: #111; background: #fff; max-width: none; margin: 0; padding: 0; }
+p { margin: 0 0 9pt; }
+/* Sender block: the first two paragraphs (name, then contact line). */
+body > p:first-of-type { font-size: 17pt; margin-bottom: 1pt; }
+body > p:first-of-type + p { font-size: 9.5pt; color: #333; border-bottom: 1px solid #333; padding-bottom: 6pt; margin-bottom: 14pt; }
+strong { font-weight: 700; }
+ul { margin: 0 0 9pt; padding-left: 16pt; }
+li { margin: 2pt 0; }

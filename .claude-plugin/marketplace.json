@@ -1,0 +1,12 @@
+{
+  "name": "resume-pipeline",
+  "description": "Marketplace for the resume-pipeline plugin: job-search packs with Claude Code.",
+  "owner": { "name": "Mrinal Aswin" },
+  "plugins": [
+    {
+      "name": "resume-pipeline",
+      "source": "./",
+      "description": "Job-search packs built on the hiring funnel: resume, LinkedIn, ATS, reviewer lenses, cover letters, interview prep and a dashboard."
+    }
+  ]
+}

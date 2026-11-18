@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Job Search Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: a candidate file. Masthead labels the file; the hiring funnel runs as one pipeline of gates;
+   everything below is quiet, bordered by role, with state carried by stripes, pills and meters.
+   Colour: a case file on warm paper, written in fountain-pen ink blue. Red, amber and green mean
+   gate status and priority only; the ink blue marks what can be clicked or is selected. */
+:root {
+  --paper: #f4efe4;      /* page ground: manila paper */
+  --sheet: #fffdf8;      /* raised surfaces: a fresh sheet */
+  --tint: #ebe4d4;       /* inset wells, table heads */
+  --ink: #1f1a14;        /* text: sepia-black */
+  --ink-2: #5e5446;      /* secondary text */
+  --rule: #dcd2bf;       /* hairlines and borders */
+  --accent: #24479e;     /* fountain-pen ink blue: interactive and selected */
+  --accent-wash: #e3e8f5;
+  --on-accent: #ffffff;
+  --red: #b0281a; --red-wash: #f8e4dc;
+  --amber: #8a5a00; --amber-wash: #f5e8c8;
+  --green: #2f6b3a; --green-wash: #e2eedb;
+  --grey: #5d564b; --grey-wash: #ebe5d8;
+  --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --r: 10px; --r-sm: 7px;
+  --lift: 0 1px 0 rgba(31, 26, 20, .04), 0 2px 8px -4px rgba(31, 26, 20, .14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #15130f; --sheet: #1e1b16; --tint: #29251e; --ink: #ede6d8; --ink-2: #a99f8d; --rule: #3a342a;
+    --accent: #8fa9f0; --accent-wash: #1f2740; --on-accent: #0e1530;
+    --red: #f08a76; --red-wash: #3a1d16; --amber: #e9b55c; --amber-wash: #33270f; --green: #8ccf8f; --green-wash: #18291a;
+    --grey: #a99f8d; --grey-wash: #2a261f; --lift: none; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #15130f; --sheet: #1e1b16; --tint: #29251e; --ink: #ede6d8; --ink-2: #a99f8d; --rule: #3a342a;
+  --accent: #8fa9f0; --accent-wash: #1f2740; --on-accent: #0e1530;
+  --red: #f08a76; --red-wash: #3a1d16; --amber: #e9b55c; --amber-wash: #33270f; --green: #8ccf8f; --green-wash: #18291a;
+  --grey: #a99f8d; --grey-wash: #2a261f; --lift: none; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--f-body); font-feature-settings: "tnum" 0; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 0 128px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { text-wrap: balance; }
+a { color: var(--accent); text-underline-offset: 2px; }
+.muted { color: var(--ink-2); font-size: 14px; }
+.mono { font-family: var(--f-mono); }
+
+/* Masthead */
+.masthead { padding-block: 28px 18px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 24px; align-items: end; border-bottom: 1px solid var(--rule); }
+.eyebrow { font: 600 11.5px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+h1 { font: 700 clamp(28px, 4.4vw, 40px)/1.05 var(--f-display); letter-spacing: -.02em; margin: 0; }
+.target { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--ink-2); }
+.target b { color: var(--ink); font-weight: 600; }
+.stamp { font: 500 12px/1.4 var(--f-mono); color: var(--ink-2); text-align: right; }
+.mast-tools { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; flex-wrap: wrap; }
+@media (max-width: 640px) { .masthead { grid-template-columns: minmax(0, 1fr); padding-block: 20px 14px; gap: 10px; } .target { gap: 2px 12px; font-size: 13.5px; }
+  .stamp, .mast-tools { text-align: left; justify-content: flex-start; } .stamp { display: none; } .mast-tools { margin-top: 4px; }
+  nav.tabs { mask-image: linear-gradient(to right, #000 85%, transparent); } }
+
+/* Controls */
+button, .btn { font: 500 13px/1.2 var(--f-body); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink);
+  padding: 7px 12px; border-radius: var(--r-sm); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: border-color .15s, background .15s; }
+button:hover, .btn:hover { border-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.primary, button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn.primary:hover, button.primary:hover { filter: brightness(1.08); }
+.btn.small, button.small { padding: 4px 9px; font-size: 12px; }
+button:disabled, button:disabled:hover { opacity: .45; cursor: not-allowed; filter: none; border-color: var(--rule); }
+button.primary:disabled { background: var(--tint); border-color: var(--tint); color: var(--ink-2); opacity: 1; }
+button.ghost { background: transparent; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Tabs */
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; background: var(--paper); display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--rule); margin-top: 4px; }
+nav.tabs::-webkit-scrollbar { display: none; }
+nav.tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 13px 12px 11px; font: 500 14px/1 var(--f-body); color: var(--ink-2); white-space: nowrap; }
+nav.tabs button:hover { color: var(--ink); }
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+nav.tabs .count-badge { font: 600 11px/1 var(--f-mono); background: var(--tint); color: var(--ink-2); padding: 3px 6px; border-radius: 99px; margin-left: 4px; }
+.panel[hidden] { display: none; }
+
+/* Section heads */
+h2.sec { font: 700 19px/1.2 var(--f-display); letter-spacing: -.01em; margin: 34px 0 6px; }
+.lede { color: var(--ink-2); font-size: 14px; margin: 0 0 14px; max-width: 68ch; }
+
+/* Notes */
+.note { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); padding: 12px 18px; margin-top: 16px; }
+.note.ok { border-color: color-mix(in srgb, var(--green) 40%, var(--rule)); background: var(--green-wash); font-size: 14px; }
+.note.warn { border-color: color-mix(in srgb, var(--amber) 45%, var(--rule)); background: var(--amber-wash); font-size: 14px; }
+.note h3 { font: 700 15px/1.3 var(--f-display); margin: 14px 0 4px; }
+.note ol, .note ul { padding-left: 20px; margin: 6px 0 10px; max-width: 72ch; }
+.note p { max-width: 72ch; }
+code, .cmd { font: 500 12.5px var(--f-mono); background: var(--tint); padding: 1px 5px; border-radius: 5px; word-break: break-word; }
+
+/* Pipeline of gates: the page's one bold element */
+.pipeline { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0; position: relative; }
+.pipeline::before { content: ""; position: absolute; left: 6%; right: 6%; top: 21px; height: 2px; background: var(--rule); }
+.pipeline > li { display: flex; min-width: 0; }
+.stage { position: relative; width: 100%; display: grid; justify-items: center; align-content: start; text-align: center; gap: 6px; padding: 0 4px 6px; background: none; border: 0; border-radius: var(--r); cursor: pointer; font: inherit; color: inherit; }
+.stage:hover .node { transform: translateY(-1px); box-shadow: 0 0 0 4px var(--accent-wash); }
+.node { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--f-mono); background: var(--sheet); border: 2px solid var(--grey); color: var(--ink); position: relative; z-index: 1; transition: transform .15s, box-shadow .15s; }
+.stage.red .node { border-color: var(--red); background: var(--red-wash); color: var(--red); }
+.stage.amber .node { border-color: var(--amber); background: var(--amber-wash); color: var(--amber); }
+.stage.green .node { border-color: var(--green); background: var(--green-wash); color: var(--green); }
+.stage .sname { font: 600 13.5px/1.25 var(--f-body); }
+.stage .sstate { font: 600 11px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+.stage.red .sstate { color: var(--red); } .stage.amber .sstate { color: var(--amber); } .stage.green .sstate { color: var(--green); }
+.stage .sopen { font-size: 12px; color: var(--ink-2); }
+.pipe-scroll { overflow-x: auto; scrollbar-width: none; padding-top: 2px; }
+.pipe-scroll::-webkit-scrollbar { display: none; }
+@media (max-width: 860px) {
+  .pipeline { grid-template-columns: repeat(8, 96px); width: max-content; scroll-snap-type: x proximity; }
+  .pipeline::before { left: 48px; right: 48px; }
+  .pipe-scroll { margin-inline: -16px; padding-inline: 16px; mask-image: linear-gradient(to right, #000 88%, transparent); }
+}
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink-2); margin-top: 14px; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+
+/* Overview: funnel across the top, Do next and numbers side by side; on phones Do next comes first */
+.ov { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); column-gap: 28px; align-items: start;
+  grid-template-areas: "pipe pipe" "next nums" "hist hist"; }
+.ov > * { min-width: 0; }
+.ov-pipe { grid-area: pipe; } .ov-next { grid-area: next; } .ov-nums { grid-area: nums; } .ov-hist { grid-area: hist; }
+@media (max-width: 860px) { .ov { grid-template-columns: minmax(0, 1fr); grid-template-areas: "next" "pipe" "nums" "hist"; } .ov-next h2.sec { margin-top: 22px; } }
+.do-next { list-style: none; counter-reset: step; margin: 0; padding: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; box-shadow: var(--lift); }
+.do-next li { counter-increment: step; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; padding: 13px 16px; cursor: pointer; text-align: left; transition: background .15s; }
+.do-next li + li { border-top: 1px solid var(--rule); }
+.do-next li.prio-P0 { box-shadow: inset 4px 0 0 var(--red); } .do-next li.prio-P1 { box-shadow: inset 4px 0 0 var(--amber); }
+.do-next .m .cid { font: 600 12px/1.6 var(--f-mono); color: var(--ink-2); margin-right: 2px; }
+.tag { display: inline-flex; padding: 1px 7px; border-radius: 5px; font: 600 11.5px/1.5 var(--f-mono); background: var(--tint); color: var(--ink-2); white-space: nowrap; }
+.do-next li:hover { background: color-mix(in srgb, var(--accent-wash) 55%, transparent); }
+.do-next li::before { content: counter(step); font: 700 18px/1 var(--f-display); color: var(--accent); padding-top: 2px; }
+.do-next .t { font-weight: 600; line-height: 1.35; }
+.do-next .m { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
+.stat { background: var(--sheet); padding: 12px 14px; text-align: left; border: 0; border-radius: 0; display: block; width: 100%; font: inherit; color: inherit; cursor: pointer; }
+.stat:hover { background: var(--accent-wash); }
+.stat .k { font-size: 12px; color: var(--ink-2); }
+.stat .v { font: 600 22px/1.15 var(--f-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.stat .d { font-size: 12px; color: var(--ink-2); }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 99px; font: 600 11.5px/1.4 var(--f-body); background: var(--grey-wash); color: var(--grey); white-space: nowrap; }
+.pill.red, .pill.Critical, .pill.P0, .pill.Reject { background: var(--red-wash); color: var(--red); }
+.pill.amber, .pill.High, .pill.P1, .pill.Borderline, .pill.Mixed { background: var(--amber-wash); color: var(--amber); }
+.pill.green, .pill.Advance { background: var(--green-wash); color: var(--green); }
+.pill.Medium { background: var(--accent-wash); color: var(--accent); }
+.pill.id { font-family: var(--f-mono); font-weight: 600; background: var(--tint); color: var(--ink); }
+
+/* Actions */
+.toolbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 43px); z-index: 5; background: var(--paper); padding: 12px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 10px; }
+.toolbar .tbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.toolbar .tbar input[type="search"] { flex: 1 1 200px; height: 36px; }
+.toolbar .tbar > .seg { height: 36px; align-items: stretch; } .toolbar .tbar > button { height: 36px; }
+.filter-panel > .row { display: grid; grid-template-columns: 54px minmax(0, 1fr); align-items: baseline; gap: 8px; }
+.filter-panel > .row > .row { gap: 6px; }
+#filterBtn[aria-expanded="true"], #filterBtn.on { border-color: var(--accent); color: var(--accent); }
+.filter-panel { display: grid; gap: 8px; padding-top: 2px; }
+.filter-panel[hidden] { display: none; }
+.active-filters:empty { display: none; }
+.active-filters button { border-radius: 99px; padding: 4px 6px 4px 11px; font-size: 12.5px; background: var(--accent-wash); border-color: transparent; color: var(--accent); font-weight: 600; }
+.active-filters button span { font-size: 15px; line-height: 1; padding: 0 3px; opacity: .8; }
+.chip { border-radius: 99px; padding: 5px 11px; font-size: 12.5px; }
+.chip[aria-pressed="true"] { background: var(--accent-wash); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.filter-label { font: 600 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); min-width: 54px; }
+input[type="search"], input[type="number"], input[type="date"], input[type="text"], input[type="url"], select { font: 400 14px/1.3 var(--f-body); padding: 8px 10px; border-radius: var(--r-sm); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); min-width: 0; width: 100%; }
+input[type="search"] { flex: 1 1 240px; width: auto; }
+::placeholder { color: var(--ink-2); opacity: 1; }
+@media (max-width: 640px) { input[type="search"], input[type="number"], input[type="date"], input[type="text"], input[type="url"], select, .panel textarea.jd { font-size: 16px; } }
+textarea.jd { font: 400 14px/1.45 var(--f-body); padding: 10px 12px; border-radius: var(--r-sm); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); width: 100%; min-height: 220px; resize: vertical; box-sizing: border-box; }
+.form.wide { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.kw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 12px; }
+.kw-grid .row { flex-wrap: wrap; gap: 6px; }
+.card { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); padding: 16px 18px; margin: 10px 0; box-shadow: var(--lift); position: relative; }
+.card.prio-P0 { border-left: 3px solid var(--red); }
+.card.prio-P1 { border-left: 3px solid var(--amber); }
+.card.done { opacity: .66; box-shadow: none; border-left-color: var(--rule); }
+/* Action cards: one line each until opened */
+.act-list { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); box-shadow: var(--lift); overflow: hidden; }
+.card.act { padding: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none; transition: opacity .2s, transform .2s; }
+.card.act + .card.act { border-top: 1px solid var(--rule); }
+.card.act.prio-P0 { border-left: 0; box-shadow: inset 4px 0 0 var(--red); }
+.card.act.prio-P1 { border-left: 0; box-shadow: inset 4px 0 0 var(--amber); }
+.act .seg { background: transparent; box-shadow: inset 0 0 0 1px var(--rule); }
+.act .seg button[aria-pressed="true"] { background: transparent; box-shadow: none; }
+.act:hover .seg, .act:focus-within .seg, .act.open .seg { background: var(--tint); box-shadow: none; }
+.act:hover .seg button[aria-pressed="true"], .act.open .seg button[aria-pressed="true"] { background: var(--sheet); }
+.group-key { font: 500 11px/1 var(--f-mono); letter-spacing: .04em; text-transform: none; color: var(--ink-2); margin-left: 10px; }
+.card.act.done { box-shadow: none; }
+.card.act.flash { outline-offset: -2px; }
+.card.act { scroll-margin-top: 140px; }
+.card.act.leaving { opacity: 0; transform: translateX(12px); }
+.act-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; align-items: center; padding: 11px 14px 11px 18px; }
+.act-toggle { align-items: center; }
+.act h3 { margin: 0; font: 600 15px/1.35 var(--f-body); }
+.act-toggle { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 44px minmax(0, 1fr) 16px; gap: 4px 10px; align-items: baseline; width: 100%; cursor: pointer; border-radius: var(--r-sm); }
+.act-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.act-toggle .cid { font: 600 12.5px/1.6 var(--f-mono); color: var(--ink-2); }
+.act-toggle .ctitle { min-width: 0; }
+.act-toggle .chev { width: 8px; height: 8px; border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2); transform: rotate(45deg) translateY(-3px); transition: transform .15s; justify-self: center; }
+.act-toggle[aria-expanded="true"] .chev { transform: rotate(225deg) translate(-2px, -1px); }
+@media (hover: hover) { .act-toggle:hover .ctitle { color: var(--accent); } }
+.act .meta { grid-column: 2; color: var(--ink-2); display: flex; gap: 5px; flex-wrap: wrap; }
+@media (min-width: 761px) { .act-toggle { grid-template-columns: 44px auto auto 1fr; } .act .meta { grid-column: 3; grid-row: 1; } .act-toggle .chev { grid-column: 4; justify-self: end; margin-right: 4px; } }
+.act .meta:empty { display: none; }
+.act-body { padding: 0 18px 16px 70px; }
+.act-body[hidden] { display: none; }
+.act-body > .why:first-child { margin-top: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 560px) { .act-head { grid-template-columns: minmax(0, 1fr); padding: 12px 12px 12px 14px; } .act-head .seg { justify-self: end; } .act-toggle { grid-template-columns: 38px minmax(0, 1fr) 14px; } .act-body { padding: 0 14px 14px; } }
+.card.flash { outline: 2px solid var(--accent); outline-offset: 3px; }
+.card-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+.card-head > div:first-child { flex: 1 1 320px; min-width: 0; }
+.card h3 { font: 600 16px/1.35 var(--f-body); margin: 6px 0 0; }
+.meta { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+.unsaved { color: var(--amber); font: 600 12px var(--f-body); }
+.why { color: var(--ink-2); margin: 8px 0 0; max-width: 78ch; }
+.seg { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--r-sm); flex: 0 0 auto; background: var(--tint); }
+.seg button { border: 0; border-radius: 5px; padding: 5px 10px; font-size: 12.5px; background: transparent; color: var(--ink-2); }
+.seg button:hover { color: var(--ink); background: var(--sheet); }
+.seg button[aria-pressed="true"] { background: var(--sheet); color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(31, 26, 20, .14); }
+.seg button[aria-pressed="true"][data-s="open"] { background: var(--accent-wash); color: var(--accent); font-weight: 600; }
+.seg button[aria-pressed="true"][data-s="resolved"] { background: var(--green-wash); color: var(--green); font-weight: 600; }
+.seg button[aria-pressed="true"][data-s="ignored"] { background: var(--grey-wash); color: var(--grey); font-weight: 600; }
+.links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.copy { margin-top: 12px; border-radius: var(--r-sm); overflow: hidden; background: var(--paper); }
+.copy-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; background: var(--tint); font: 600 12.5px var(--f-body); flex-wrap: wrap; }
+.count { font: 500 11.5px var(--f-mono); color: var(--ink-2); }
+.count.over { color: var(--red); font-weight: 600; }
+.copy pre { margin: 0; padding: 12px 14px; white-space: pre-wrap; word-wrap: break-word; font: 13.5px/1.6 var(--f-body); max-height: 320px; overflow: auto; }
+details { margin-top: 10px; }
+summary { cursor: pointer; font: 600 13.5px var(--f-body); color: var(--accent); list-style-position: outside; }
+details ol, details ul { margin: 8px 0 0; padding-left: 22px; max-width: 78ch; }
+details li { margin: 5px 0; }
+.group-title { font: 600 11.5px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin: 28px 0 8px; }
+.empty { text-align: center; color: var(--ink-2); padding: 36px 0; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: var(--r); background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 11px/1.2 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); background: var(--tint); }
+tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: color-mix(in srgb, var(--accent-wash) 45%, transparent); }
+td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-size: 12.5px; white-space: nowrap; }
+.miss { color: var(--red); font-weight: 600; }
+
+/* Meters, drawn to scale (0-100%, pass-mark tick) */
+.meters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+@media (max-width: 760px) { .meters { grid-template-columns: minmax(0, 1fr); } }
+.meters.panel-set { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); box-shadow: var(--lift); padding: 18px 20px; gap: 32px; }
+.meter-card { padding: 0; }
+@media (max-width: 760px) { .meters.panel-set { gap: 22px; } }
+.kw-copy { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 14px; }
+.kw-copy button { border: 0; background: var(--tint); border-radius: var(--r-sm); padding: 6px 10px; font-size: 13px; }
+.kw-copy button:hover { background: var(--accent-wash); color: var(--accent); }
+
+.meter-card .k { font-size: 12.5px; color: var(--ink-2); }
+.meter-card .v { font: 700 30px/1.1 var(--f-display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 2px 0 10px; }
+.meter { position: relative; height: 10px; background: var(--tint); border-radius: 99px; }
+.meter > span { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--accent); }
+.meter.below > span { background: var(--amber); }
+.meter .tick { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); border-radius: 1px; }
+.meter-scale { position: relative; height: 14px; font: 500 11px/14px var(--f-mono); color: var(--ink-2); margin-top: 6px; }
+.meter-scale span { position: absolute; top: 0; white-space: nowrap; }
+.meter-scale .lo { left: 0; } .meter-scale .hi { right: 0; } .meter-scale .mark { transform: translateX(-50%); color: var(--ink); }
+.meter-card .d { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+
+/* Lenses */
+.score { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr) 36px; align-items: center; gap: 10px; font-size: 13px; margin: 5px 0; }
+.score .lbl { color: var(--ink-2); }
+.bar { height: 8px; background: var(--tint); border-radius: 99px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.bar.lo span { background: var(--red); } .bar.mid span { background: var(--amber); } .bar.hi span { background: var(--green); }
+.score b { font: 600 12px var(--f-mono); text-align: right; }
+.lens-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.lens-grid .card { margin: 0; }
+@media (max-width: 860px) { .lens-grid { grid-template-columns: minmax(0, 1fr); } }
+.finding { border-left: 3px solid var(--rule); padding: 10px 0 10px 12px; margin: 10px 0; }
+.finding.sev-Critical { border-left-color: var(--red); } .finding.sev-High { border-left-color: var(--amber); }
+.finding.sev-Medium { border-left-color: var(--accent); } .finding.sev-Low { border-left-color: var(--grey); }
+.finding .ev { color: var(--ink-2); margin: 6px 0; font-style: italic; }
+.settled-list { margin-top: 14px; } .settled-list .tbl-wrap { margin-top: 10px; } tr.settled td { color: var(--ink-2); }
+.finding .ev::before { content: "\201C"; } .finding .ev::after { content: "\201D"; }
+
+/* Documents */
+.doc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.doc-grid.compact { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.doc-grid .card { margin: 0; display: flex; flex-direction: column; }
+.doc-grid .links { margin-top: auto; padding-top: 12px; }
+.doc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.doc-head h3 { margin: 0; }
+.doc-warn { margin: 8px 0 0; font-size: 13px; color: var(--amber); }
+@media (max-width: 860px) { .doc-grid, .doc-grid.compact { grid-template-columns: minmax(0, 1fr); } }
+.doc-list { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); box-shadow: var(--lift); }
+.doc-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 24px; align-items: center; padding: 16px 18px; }
+.doc-row + .doc-row { border-top: 1px solid var(--rule); }
+.doc-row h3 { font: 600 15.5px/1.3 var(--f-body); margin: 0; }
+.doc-row .when { font: 500 11.5px/1 var(--f-mono); color: var(--ink-2); margin-left: 10px; white-space: nowrap; }
+.doc-row .desc { color: var(--ink-2); font-size: 14px; margin: 4px 0 0; max-width: 64ch; }
+.doc-row .doc-warn { margin-top: 6px; }
+.doc-acts { display: flex; gap: 4px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.doc-acts .primary { margin-right: 6px; }
+button.quiet { background: transparent; border-color: transparent; color: var(--accent); padding: 7px 9px; }
+button.quiet:hover { background: var(--accent-wash); border-color: transparent; }
+.doc-list.compact .doc-row { padding: 11px 18px; }
+@media (max-width: 640px) { .doc-row { grid-template-columns: minmax(0, 1fr); padding: 14px; } .doc-row .when { display: block; margin: 3px 0 0; } .doc-acts { justify-content: flex-start; margin-left: -9px; } .doc-acts .primary { margin-left: 9px; } }
+
+/* Funnel */
+.diag { border-left: 4px solid var(--grey); }
+.diag.red { border-left-color: var(--red); } .diag.amber { border-left-color: var(--amber); } .diag.green { border-left-color: var(--green); }
+.rate { display: grid; grid-template-columns: minmax(0, 1fr) 46px; gap: 8px; align-items: center; min-width: 120px; }
+.form { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.form label { display: grid; gap: 5px; font-size: 12.5px; color: var(--ink-2); align-content: end; }
+.form label small { font-size: 11.5px; color: var(--ink-2); opacity: .85; }
+.card input:not([type="checkbox"]), .card select, .card textarea { background: var(--paper); }
+.card input:focus, .card select:focus, .card textarea:focus { background: var(--sheet); border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-wash); }
+.form-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+.form-hint { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; max-width: 72ch; }
+
+/* Pending bar and toast */
+.pending { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--sheet); border-top: 2px solid var(--amber); box-shadow: 0 -6px 18px -8px rgba(0,0,0,.18); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.pending .wrap { padding-block: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.pending .msg { flex: 1 1 260px; font-size: 14px; }
+.toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: var(--r-sm); font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; }
+.toast.show { opacity: 1; }
+.toast.has-action { pointer-events: auto; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 14px; }
+.toast button { background: transparent; border-color: color-mix(in srgb, var(--paper) 40%, transparent); color: var(--paper); padding: 4px 10px; font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+@media (max-width: 560px) { .card { padding: 14px; } .card.act { padding: 0; } .seg button { padding: 6px 8px; } .toolbar { top: calc(env(safe-area-inset-top, 0px) + 41px); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div style="min-width:0">
+      <div class="eyebrow">Candidate file &middot; job search</div>
+      <h1 id="title">Job search dashboard</h1>
+      <div class="target" id="target"></div>
+    </div>
+    <div>
+      <div class="stamp" id="sub"></div>
+      <div class="mast-tools">
+        <button id="helpBtn" aria-expanded="false" aria-controls="help">How to use this page</button>
+        <button id="themeBtn" title="Switch between light and dark">Theme</button>
+      </div>
+    </div>
+  </header>
+
+  <p class="note warn" id="noStore" hidden role="note">
+    <b>Status changes won't be remembered in this view.</b> It is a preview without browser storage. Open the file directly in Chrome or Safari to keep progress between visits, or use <b>Copy update command</b> before closing.
+  </p>
+
+  <p class="note ok" id="dbNote" hidden role="note"><b>Connected to the local database.</b> Changes you make here are saved to tracker.sqlite and applied to the source files straight away.</p>
+  <p class="note warn" id="pendingNote" hidden role="note"></p>
+  <p class="note warn" id="recaptureNote" hidden role="note"></p>
+
+  <section class="note" id="help" hidden>
+    <h3>What this page is</h3>
+    <p>The whole job search on one page, organised as a hiring funnel. Each gate, from G1 (found in search) to G8 (background check), is a point where an application can be lost, and each has its own evaluator. Every finding links to the action that fixes it.</p>
+    <h3>How to work through it</h3>
+    <ol>
+      <li><b>Overview:</b> start with <b>Do next</b>. It follows the framework's order: background-check risk first (it can cost an offer), then the earliest Red gate.</li>
+      <li><b>Actions:</b> each action is one line; select it to open. A red edge marks P0, amber P1. Each card has why, a link to the exact page, text to copy (with LinkedIn's length limits) and step-by-step instructions. Mark it Resolved or Ignored when done.</li>
+      <li><b>Lenses:</b> what each independent reviewer (recruiter, hiring manager, technical interviewer, HR, domain lead) concluded, and the findings two or more of them agreed on.</li>
+      <li><b>ATS:</b> keyword coverage on the resume and on LinkedIn. Skills the resume proves but LinkedIn lacks can be copied and added in one go.</li>
+      <li><b>Funnel:</b> once applications start, log each week's numbers. The page shows conversion at each step and names the gate that's leaking.</li>
+    </ol>
+    <h3>Saving changes</h3>
+    <p><b>Best: run the local server.</b> From the workspace folder run <code id="serveCmd">actions.py serve</code> and open the address it prints. Every click and funnel week is then saved to <code>tracker.sqlite</code> and applied to the source files immediately, with a log under Overview, Recent changes. The server listens on this computer only.</p>
+    <p><b>Opened as a file instead?</b> Clicks are remembered in this browser only. When the bar appears at the bottom, <b>Copy update command</b> gives a terminal command that records and applies the change, or use <b>Copy message for Claude</b>. Changes kept in the browser can be sent later with <b>Save to database</b> once the server is running.</p>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+
+  <section class="panel" id="p-overview" role="tabpanel"></section>
+  <section class="panel" id="p-actions" role="tabpanel" hidden>
+    <div class="toolbar" role="region" aria-label="Filters">
+      <div class="tbar">
+        <div class="seg" id="statusChips" role="group" aria-label="Status"></div>
+        <input type="search" id="q" placeholder="Search actions, or an ID like R1" aria-label="Search actions">
+        <button id="filterBtn" aria-expanded="false" aria-controls="filterPanel">Filter</button>
+      </div>
+      <div class="row active-filters" id="activeFilters"></div>
+      <div class="filter-panel" id="filterPanel" hidden>
+        <div class="row"><span class="filter-label">Area</span><span class="row" id="areaChips"></span></div>
+        <div class="row"><span class="filter-label">Gate</span><span class="row" id="gateChips"></span></div>
+      </div>
+    </div>
+    <main id="list"></main>
+  </section>
+  <section class="panel" id="p-documents" role="tabpanel" hidden></section>
+  <section class="panel" id="p-tailor" role="tabpanel" hidden></section>
+  <section class="panel" id="p-lenses" role="tabpanel" hidden></section>
+  <section class="panel" id="p-ats" role="tabpanel" hidden></section>
+  <section class="panel" id="p-funnel" role="tabpanel" hidden></section>
+  <section class="panel" id="p-framework" role="tabpanel" hidden></section>
+</div>
+
+<div class="pending" id="pending" hidden>
+  <div class="wrap">
+    <div class="msg" id="pendingMsg"></div>
+    <button class="primary" id="copyCmd">Copy update command</button>
+    <button id="copyMsg">Copy message for Claude</button>
+    <button id="discard" class="ghost">Discard</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const DATA = /*__ACTIONS_DATA__*/null;
+(function () {
+  "use strict";
+  const SCRIPTS = DATA.scripts || ".claude/skills/resume-pipeline/scripts";  // set at render: project or plugin install
+  const PY = (script) => `python3 -I "${SCRIPTS}/${script}"`;
+  const STATUSES = ["open", "resolved", "ignored"];
+  const LABEL = { open: "Open", resolved: "Resolved", ignored: "Ignored" };
+  const PRI = { P0: 0, P1: 1, P2: 2 };
+  const SEV = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+  const TABS = [["overview", "Overview"], ["actions", "Actions"], ["documents", "Documents"], ["tailor", "Tailor to a job"], ["lenses", "Lenses"], ["ats", "ATS"], ["funnel", "Funnel"], ["framework", "Framework"]];
+  const KEY = "actions:" + DATA.slug;
+  const FW = DATA.framework || { gates: [], funnel: { columns: [], stages: [] } };
+  const GATE = Object.fromEntries(FW.gates.map((g) => [g.id, g]));
+  const CARD = Object.fromEntries((DATA.review.scorecard || []).map((g) => [g.gate, g]));
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, props, kids) => {
+    const n = document.createElement(tag);
+    if (props) for (const [k, v] of Object.entries(props)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "text") n.textContent = v; else if (k === "class") n.className = v;
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v);
+    }
+    (kids || []).forEach((c) => c && n.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+    return n;
+  };
+  const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
+  function richText(tag, text, cls) {
+    const n = el(tag, cls ? { class: cls } : null);
+    String(text || "").split(/(https?:\/\/[^\s)]+)/g).forEach((part, i) => {
+      if (i % 2 && safeUrl(part)) n.appendChild(el("a", { href: part, target: "_blank", rel: "noopener", text: part }));
+      else if (part) n.appendChild(document.createTextNode(part));
+    });
+    return n;
+  }
+  const pill = (text, cls) => el("span", { class: "pill " + (cls || ""), text });
+  const statusClass = (s) => (["red", "amber", "green"].includes(s) ? s : "");
+  // A verdict that names two outcomes for two gates ("Advance at G3, Borderline at G1") is Mixed, not an advance.
+  const verdictWord = (v) => { const found = [...new Set(((v || "").split(".")[0].match(/\b(Advance|Borderline|Reject)\b/g) || []))];
+    return found.length > 1 ? "Mixed" : found[0] || ""; };
+
+  // ---------- storage (statuses only) ----------
+  const storageOK = (() => { try { localStorage.setItem("actions:probe", "1"); localStorage.removeItem("actions:probe"); return true; } catch (e) { return false; } })();
+  const API = DATA.api;  // set only when served by `actions.py serve`; null when opened as a file
+  if (API) { $("dbNote").hidden = false; } else if (!storageOK) $("noStore").hidden = false;
+  if (DATA.pending) { $("pendingNote").hidden = false; $("pendingNote").textContent =
+    `${DATA.pending} saved edit${DATA.pending > 1 ? "s are" : " is"} waiting to be applied to the source files. Run: ${PY("actions.py")} sync ${DATA.slug}`; }
+  if (DATA.recapture && DATA.recapture.ids && DATA.recapture.ids.length) { $("recaptureNote").hidden = false; $("recaptureNote").textContent =
+    `${DATA.recapture.ids.length} LinkedIn action${DATA.recapture.ids.length > 1 ? "s" : ""} (${DATA.recapture.ids.join(", ")}) marked done since LinkedIn was last read on ${DATA.recapture.since}. Ask Claude to re-capture your LinkedIn: that verifies the changes and re-scores the profile.`; }
+  async function post(body) {
+    const res = await fetch(API.url, { method: "POST", headers: { "Content-Type": "application/json", "X-Tracker-Token": API.token }, body: JSON.stringify(body) });
+    let out = {}; try { out = await res.json(); } catch (e) {}
+    return { http: res.status, ...out };
+  }
+  const localStamp = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);  // same local clock as the server log
+  const logLocal = (entry) => { DATA.history = [{ at: localStamp(), source: "page", ...entry }, ...(DATA.history || [])].slice(0, 25); };
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* in-memory only */ } }
+  let overrides = load();
+  for (const it of DATA.items) {  // source wins once it has caught up or moved on
+    const o = overrides[it.id];
+    if (o && (o.status === it.status || o.base !== it.status)) delete overrides[it.id];
+  }
+  for (const id of Object.keys(overrides)) if (!DATA.items.some((i) => i.id === id)) delete overrides[id];
+  save(overrides);
+  const statusOf = (it) => (overrides[it.id] ? overrides[it.id].status : it.status);
+  const byId = Object.fromEntries(DATA.items.map((i) => [i.id, i]));
+
+  function toast(msg, undo) {
+    const t = $("toast"); t.replaceChildren(msg); t.classList.toggle("has-action", !!undo);
+    if (undo) t.appendChild(el("button", { text: "Undo", onclick: () => { t.classList.remove("show"); undo(); } }));
+    t.classList.add("show");
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), undo ? 5000 : 1600);
+  }
+  async function copy(text, what) {
+    try { await navigator.clipboard.writeText(text); }
+    catch (e) {
+      const ta = el("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    toast((what || "Text") + " copied");
+  }
+  const copyBtn = (text, what, label) => el("button", { class: "small", text: label || "Copy", onclick: () => copy(text, what) });
+
+  // ---------- navigation ----------
+  const state = { tab: "overview", area: "All", gate: "All", status: "open", q: "", filters: false };
+  const expanded = new Set();  // action cards the person has opened
+  function go(tab, opts) {
+    Object.assign(state, opts || {});
+    state.tab = tab;
+    if (opts && opts.focus) expanded.add(opts.focus);
+    try { history.replaceState(null, "", "#" + tab); } catch (e) {}
+    render();
+    if (opts && opts.focus) setTimeout(() => {
+      const c = $("item-" + opts.focus); if (!c) return;
+      c.scrollIntoView({ behavior: "smooth", block: "center" }); c.classList.add("flash");
+      setTimeout(() => c.classList.remove("flash"), 1500);
+    }, 30);
+    window.scrollTo({ top: 0 });
+  }
+  const toAction = (id) => go("actions", { area: "All", gate: "All", q: "", focus: id,
+    status: byId[id] && statusOf(byId[id]) === "open" ? "open" : "all" });
+  const toGate = (g) => go("actions", { area: "All", gate: g, status: "open", q: "" });
+  const idChip = (id) => el("button", { class: "small", title: byId[id] ? byId[id].title : id,
+    onclick: () => toAction(id), text: id + (byId[id] && statusOf(byId[id]) !== "open" ? " \u2713" : "") });
+
+  // ---------- ranking: framework order of work ----------
+  const SRANK = { red: 0, amber: 1, green: 2 };
+  function gateRank(g) {
+    const s = CARD[g] ? CARD[g].status : "none";
+    const order = parseInt(g.slice(1), 10) || 9;
+    if (g === "G8" && s === "red") return -1;  // fix background-check risk before the first offer
+    return (SRANK[s] ?? 3) * 10 + order;
+  }
+  const itemRank = (it) => Math.min(99, ...(it.gates.length ? it.gates.map(gateRank) : [99]));
+  const byPriority = (a, b) => (PRI[a.priority] ?? 9) - (PRI[b.priority] ?? 9) || (b.consensus || 0) - (a.consensus || 0) ||
+    a.id.localeCompare(b.id, undefined, { numeric: true });
+  // Up to PER_GATE items from each gate, gates in framework order, so one busy gate can't hide another Red one.
+  const PER_GATE = 2;
+  function nextUp(limit) {
+    const open = DATA.items.filter((i) => statusOf(i) === "open");
+    const primary = (it) => (it.gates.length ? it.gates.slice().sort((a, b) => gateRank(a) - gateRank(b))[0] : "none");
+    const groups = {};
+    open.forEach((it) => { (groups[primary(it)] = groups[primary(it)] || []).push(it); });
+    const order = Object.keys(groups).sort((a, b) => (a === "none" ? 99 : gateRank(a)) - (b === "none" ? 99 : gateRank(b)));
+    const picked = order.flatMap((g) => groups[g].sort(byPriority).slice(0, PER_GATE));
+    return picked.slice(0, limit);
+  }
+
+  // ---------- Overview ----------
+  function renderOverview() {
+    const p = $("p-overview"); p.replaceChildren();
+    const all = DATA.items, n = { open: 0, resolved: 0, ignored: 0 };
+    all.forEach((i) => n[statusOf(i)]++);
+    const handled = Math.round(((n.resolved + n.ignored) / (all.length || 1)) * 100);
+    const openP0 = all.filter((i) => statusOf(i) === "open" && i.priority === "P0").length;
+    const facts = all.filter((i) => i.source === "ledger");
+    const factsOpen = facts.filter((i) => statusOf(i) === "open").length;
+    const verdicts = DATA.lenses.map((l) => verdictWord(l.verdict));
+    const apps = DATA.funnel.reduce((s, w) => s + (w.applications || 0), 0);
+    const ats = DATA.ats || {};
+
+    const ov = el("div", { class: "ov" }), pipe = el("section", { class: "ov-pipe" });
+    pipe.appendChild(el("h2", { class: "sec", text: "Readiness through the hiring funnel" }));
+    pipe.appendChild(el("p", { class: "lede", text: `From the lens review of ${DATA.review.date || "n/a"}. Each gate is a point where an application can be lost. Select one to see its open actions; fix the earliest Red gate first.` }));
+    const rows = DATA.review.scorecard.length ? DATA.review.scorecard
+      : FW.gates.filter((g) => g.id !== "G0").map((g) => ({ gate: g.id, name: g.name, status: "", actions: [] }));
+    const STATE = { red: "Red", amber: "Amber", green: "Green" };
+    pipe.appendChild(el("div", { class: "pipe-scroll" }, [el("ol", { class: "pipeline", "aria-label": "Hiring funnel gates" }, rows.map((g) => {
+      const open = DATA.items.filter((i) => statusOf(i) === "open" && i.gates.includes(g.gate)).length;
+      return el("li", null, [el("button", { class: "stage " + statusClass(g.status), onclick: () => toGate(g.gate), title: g.finding || "",
+        "aria-label": `${g.gate} ${g.name}: ${STATE[g.status] || "not assessed"}, ${open} open actions` }, [
+        el("span", { class: "node", text: g.gate }),
+        el("span", { class: "sname", text: g.name || (GATE[g.gate] || {}).name }),
+        el("span", { class: "sstate", text: STATE[g.status] || "n/a" }),
+        el("span", { class: "sopen", text: open ? `${open} open` : "nothing open" }),
+      ])]);
+    }))]));
+    pipe.appendChild(el("div", { class: "legend" }, [
+      el("span", null, [el("i", { style: "background:var(--red)" }), "Red: a Critical finding; fix first"]),
+      el("span", null, [el("i", { style: "background:var(--amber)" }), "Amber: borderline or fixable High findings"]),
+      el("span", null, [el("i", { style: "background:var(--green)" }), "Green: would advance"]),
+    ]));
+
+    const left = el("section", { class: "ov-next" }), right = el("section", { class: "ov-nums" });
+    left.appendChild(el("h2", { class: "sec", text: "Do next" }));
+    left.appendChild(el("p", { class: "lede", text: "Background-check risk first, then the earliest Red gate. The edge marks priority: red P0, amber P1." }));
+    const up = nextUp(6);
+    if (!up.length) left.appendChild(el("p", { class: "empty", text: "Everything is resolved or ignored." }));
+    else left.appendChild(el("ol", { class: "do-next" }, up.map((it) => el("li", { tabindex: "0", role: "link", class: "prio-" + it.priority, title: `Priority ${it.priority}`,
+      onclick: () => toAction(it.id), onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toAction(it.id); } } }, [
+      el("div", { style: "min-width:0" }, [el("div", { class: "t", text: it.title }),
+        el("div", { class: "m" }, [el("span", { class: "cid", text: it.id }), el("span", { class: "sr", text: `Priority ${it.priority}.` }),
+          ...it.gates.map((g) => el("span", { class: "tag", text: g })), el("span", { class: "tag", text: it.area })])]),
+    ]))));
+
+    right.appendChild(el("h2", { class: "sec", text: "Key numbers" }));
+    right.appendChild(el("p", { class: "lede", text: "Select a number to open the related view." }));
+    const kp = el("div", { class: "stats" });
+    const kpi = (k, v, d, onclick) => kp.appendChild(el("button", { class: "stat", onclick }, [
+      el("div", { class: "k", text: k }), el("div", { class: "v", text: v }), el("div", { class: "d", text: d })]));
+    kpi("Actions handled", handled + "%", `${n.open} open of ${all.length}`, () => go("actions", { status: "open", area: "All", gate: "All", q: "" }));
+    kpi("Open P0 actions", String(openP0), "highest priority", () => go("actions", { status: "open", area: "All", gate: "All", q: "" }));
+    kpi("Resume ATS match", ats.resume == null ? "n/a" : ats.resume + "%", `pass mark ${ats.pass_mark || 80}%`, () => go("ats"));
+    kpi("LinkedIn match", ats.linkedin == null ? "n/a" : ats.linkedin + "%", "recruiter search (G1)", () => go("ats"));
+    kpi("Facts to confirm", String(factsOpen), `of ${facts.length} in the ledger`, () => go("actions", { area: "Resume facts", status: "open", gate: "All", q: "" }));
+    const vc = (w) => verdicts.filter((v) => v === w).length;
+    kpi("Reviewers advancing", `${vc("Advance")} of ${verdicts.length}`,
+      [vc("Mixed") && `${vc("Mixed")} mixed`, `${vc("Borderline")} borderline`, `${vc("Reject")} reject`].filter(Boolean).join(", "), () => go("lenses"));
+    kpi("Applications logged", String(apps), DATA.funnel.length ? `${DATA.funnel.length} week(s)` : "log weekly once applying", () => go("funnel"));
+    kpi("Weekly funnel", DATA.funnel.length ? "Live" : "Not started", "diagnoses the leaking gate", () => go("funnel"));
+    right.appendChild(kp);
+    const histSec = el("section", { class: "ov-hist" });
+    ov.append(pipe, left, right, histSec); p.appendChild(ov);
+
+    const hist = DATA.history || [];
+    histSec.appendChild(el("h2", { class: "sec", text: "Recent changes" }));
+    histSec.appendChild(el("p", { class: "lede", text: API ? "Every edit is logged in tracker.sqlite before it is applied to the source files." :
+      "Edits saved through the local server or the command line are logged in tracker.sqlite. Start the server to save from this page." }));
+    const STATE_CLS = { applied: "green", conflict: "amber", rejected: "red", pending: "" };
+    const what = (h) => h.kind === "status" ? `${h.target} \u2192 ${LABEL[(h.payload || {}).status] || (h.payload || {}).status}` : `Funnel week of ${h.target}`;
+    if (!hist.length) histSec.appendChild(el("p", { class: "muted", text: "No changes recorded yet." }));
+    else histSec.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+      el("thead", null, [el("tr", null, ["When", "Change", "From", "Result", "Detail"].map((h) => el("th", { text: h })))]),
+      el("tbody", null, hist.slice(0, 10).map((h) => el("tr", null, [
+        el("td", { class: "num", text: String(h.at || "").replace("T", " ").slice(0, 16) }), el("td", { text: what(h) }),
+        el("td", { text: h.source === "page" ? "Dashboard" : "Command line" }),
+        el("td", null, [pill(h.state, STATE_CLS[h.state])]), el("td", { class: "muted", text: h.detail || "" })])))])]));
+  }
+
+  // ---------- Actions ----------
+  function chips(container, values, current, onPick, labelFn) {
+    container.replaceChildren(...values.map((v) => el("button", {
+      class: "chip", "aria-pressed": String(v === current), text: labelFn ? labelFn(v) : v, onclick: () => onPick(v) })));
+  }
+  function card(it) {
+    const s = statusOf(it), open = expanded.has(it.id), bodyId = "body-" + it.id;
+    const seg = el("div", { class: "seg", role: "group", "aria-label": "Status of " + it.id },
+      STATUSES.map((v) => el("button", { "data-s": v, "aria-pressed": String(v === s), text: LABEL[v], onclick: () => setStatus(it, v) })));
+    const toggle = el("button", { class: "act-toggle", "aria-expanded": String(open), "aria-controls": bodyId,
+      onclick: () => { if (expanded.has(it.id)) expanded.delete(it.id); else expanded.add(it.id); renderActions(); } }, [
+      el("span", { class: "cid", text: it.id }), el("span", { class: "ctitle", text: it.title }), el("span", { class: "chev", "aria-hidden": "true" }),
+      el("span", { class: "sr", text: ` Priority ${it.priority}.` }),
+      el("span", { class: "meta" }, [...it.gates.map((g) => el("span", { class: "tag", text: g })),
+        overrides[it.id] ? el("span", { class: "unsaved", text: "not saved" }) : null])]);
+    const body = [];
+    if (it.why) body.push(richText("p", it.why, "why"));
+    const links = (it.links || []).filter((l) => safeUrl(l.url));
+    if (links.length) body.push(el("div", { class: "links" }, links.map((l, i) =>
+      el("a", { class: "btn" + (i === 0 ? " primary" : ""), href: l.url, target: "_blank", rel: "noopener", text: l.label + " \u2197" }))));
+    for (const c of it.copies || []) {
+      const len = [...c.text].length;
+      body.push(el("div", { class: "copy" }, [
+        el("div", { class: "copy-head" }, [el("span", { text: c.label }), el("span", { class: "row" }, [
+          el("span", { class: "count" + (c.limit && len > c.limit ? " over" : ""), text: c.limit ? `${len} / ${c.limit} characters` : `${len} characters` }),
+          copyBtn(c.text, c.label)])]),
+        el("pre", { text: c.text })]));
+    }
+    if (it.howto && it.howto.length) body.push(el("details", null, [el("summary", { text: "How to do it" }),
+      el("ol", null, it.howto.map((h) => richText("li", h)))]));
+    if (it.source === "ledger") body.push(el("div", { class: "muted", style: "font-size:12px;margin-top:10px",
+      text: "Tracked in resume/ASSUMPTIONS.md. Resolved = verified, Ignored = removed from the resume." }));
+    return el("article", { class: `card act prio-${it.priority}` + (s !== "open" ? " done" : "") + (open ? " open" : ""), id: "item-" + it.id,
+      title: `Priority ${it.priority}` }, [
+      el("div", { class: "act-head" }, [el("h3", null, [toggle]), seg]),
+      el("div", { class: "act-body", id: bodyId, hidden: open ? null : "" }, body)]);
+  }
+  // A card whose new status no longer matches the filter slides out before the list redraws.
+  function leaveThen(it, v, fn) {
+    const c = $("item-" + it.id);
+    const leaves = state.tab === "actions" && state.status !== "all" && v !== state.status;
+    if (c && leaves && !matchMedia("(prefers-reduced-motion: reduce)").matches) { c.classList.add("leaving"); setTimeout(fn, 200); }
+    else fn();
+  }
+  function setStatus(it, v, quiet) {
+    const was = statusOf(it);
+    if (v === was) return;
+    const undo = quiet ? null : () => setStatus(it, was, true);
+    if (!API) {
+      if (v === it.status) delete overrides[it.id]; else overrides[it.id] = { status: v, base: it.status };
+      save(overrides); leaveThen(it, v, render); toast(`${it.id} marked ${LABEL[v]}`, undo); return;
+    }
+    saveStatus(it, v, it.status).then((r) => { leaveThen(it, v, render); toast(r.ok ? `${it.id} saved: ${LABEL[v]}` : r.msg, r.ok ? undo : null); });
+  }
+  async function saveStatus(it, v, base) {
+    try {
+      const r = await post({ action: "set_status", id: it.id, status: v, base });
+      logLocal({ kind: "status", target: it.id, payload: { status: v }, state: r.state || "rejected", detail: r.detail || r.error || "" });
+      if (r.ok) { it.status = v; delete overrides[it.id]; save(overrides); return { ok: true }; }
+      return { ok: false, msg: `${it.id} not saved: ${r.detail || r.error || "the server refused it"}` };
+    } catch (e) {  // server stopped: keep the change in this browser so nothing is lost
+      overrides[it.id] = { status: v, base }; save(overrides);
+      return { ok: false, msg: "The local server isn't responding. The change is kept in this browser; restart the server to save it." };
+    }
+  }
+  function renderActions() {
+    const areas = [...new Set(DATA.items.map((i) => i.area))];
+    const gates = [...new Set(DATA.items.flatMap((i) => i.gates))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    chips($("areaChips"), ["All", ...areas], state.area, (v) => { state.area = v; render(); });
+    chips($("gateChips"), ["All", ...gates], state.gate, (v) => { state.gate = v; render(); },
+      (v) => (v === "All" ? "All gates" : `${v} ${(GATE[v] || {}).name || ""}`));
+    const n = Object.fromEntries(["open", "resolved", "ignored"].map((s) => [s, DATA.items.filter((i) => statusOf(i) === s).length]));
+    $("statusChips").replaceChildren(...["open", "resolved", "ignored", "all"].map((v) => el("button", { "data-s": v,
+      "aria-pressed": String(v === state.status), onclick: () => { state.status = v; render(); },
+      text: v === "all" ? `All ${DATA.items.length}` : `${LABEL[v]} ${n[v]}` })));
+    const active = (state.area !== "All") + (state.gate !== "All");
+    $("filterBtn").textContent = active ? `Filter \u00b7 ${active}` : "Filter";
+    $("filterBtn").classList.toggle("on", !!active);
+    $("filterBtn").setAttribute("aria-expanded", String(state.filters));
+    $("filterPanel").hidden = !state.filters;
+    $("activeFilters").replaceChildren(...[
+      state.area !== "All" && ["Area: " + state.area, () => { state.area = "All"; render(); }],
+      state.gate !== "All" && [`Gate: ${state.gate} ${(GATE[state.gate] || {}).name || ""}`, () => { state.gate = "All"; render(); }],
+    ].filter(Boolean).map(([label, clear]) => el("button", { onclick: clear, "aria-label": "Remove filter " + label }, [label, el("span", { "aria-hidden": "true", text: "\u00d7" })])));
+    if ($("q").value !== state.q) $("q").value = state.q;
+    const q = state.q.toLowerCase();
+    const shown = DATA.items.filter((i) => (state.area === "All" || i.area === state.area) &&
+      (state.gate === "All" || i.gates.includes(state.gate)) &&
+      (state.status === "all" || statusOf(i) === state.status) &&
+      (!q || [i.id, i.title, i.why, ...(i.copies || []).map((c) => c.text), ...(i.howto || [])].join(" ").toLowerCase().includes(q)))
+      .sort((a, b) => (PRI[a.priority] ?? 9) - (PRI[b.priority] ?? 9) || a.id.localeCompare(b.id, undefined, { numeric: true }));
+    const list = $("list"); list.replaceChildren();
+    if (!shown.length) list.appendChild(el("div", { class: "empty", text: state.status === "open" ? "Nothing open here." : "No actions match." }));
+    for (const area of areas) {
+      const group = shown.filter((i) => i.area === area);
+      if (!group.length) continue;
+      const first = !list.querySelector(".group-title");
+      list.appendChild(el("h2", { class: "group-title" }, [`${area} (${group.length})`, first ? el("span", { class: "group-key", text: "edge: red P0 \u00b7 amber P1" }) : null]));
+      list.appendChild(el("div", { class: "act-list" }, group.map(card)));
+    }
+  }
+
+  // ---------- Documents ----------
+  // Files are embedded at render time (base64), so downloads work from the file, the server, or a copy sent by email.
+  function download(f) {
+    try {
+      const bin = atob(f.b64), bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const url = URL.createObjectURL(new Blob([bytes], { type: f.mime }));
+      const a = el("a", { href: url, download: f.name });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast(`Downloading ${f.name}`);
+    } catch (e) { toast("This view blocks downloads. Open the page in Chrome or Safari."); }
+  }
+  const DOC_ICON = { PDF: "PDF", DOCX: "Word", MD: "Markdown" };
+  function renderDocuments() {
+    const p = $("p-documents"); p.replaceChildren();
+    const docs = DATA.documents || [];
+    if (!docs.length) { p.appendChild(el("p", { class: "empty", text: "No documents yet. They appear once the pipeline has built them." })); return; }
+    for (const group of [...new Set(docs.map((d) => d.group))]) {
+      const items = docs.filter((d) => d.group === group);
+      p.appendChild(el("h2", { class: "sec", text: group }));
+      p.appendChild(el("p", { class: "lede", text: {
+        "Apply with": "What goes out with an application. Generated from the same facts, so they always agree with each other.",
+        "Prepare with": "For interview preparation. The mock prompt pastes straight into ChatGPT.",
+        "Reference reports": "The analysis behind the actions, in Markdown." }[group] || "" }));
+      const grid = el("div", { class: "doc-list" + (group === "Reference reports" ? " compact" : "") });
+      for (const d of items) {
+        const dates = [...new Set(d.files.map((f) => f.updated))].sort().reverse();
+        grid.appendChild(el("article", { class: "doc-row" }, [
+          el("div", { style: "min-width:0" }, [
+            el("h3", null, [d.title, dates.length ? el("span", { class: "when", text: "updated " + dates[0] }) : null]),
+            d.desc ? el("p", { class: "desc", text: d.desc }) : null,
+            d.warn ? el("p", { class: "doc-warn", text: d.warn }) : null]),
+          el("div", { class: "doc-acts" }, [
+            d.copy && d.copy.text ? el("button", { class: "primary", text: d.copy.label, onclick: () => copy(d.copy.text, d.copy.label.replace(/^Copy /, "")) }) : null,
+            ...d.files.map((f, i) => { const first = !d.copy && i === 0;
+              return el("button", { class: first ? "primary" : "quiet", title: f.name, onclick: () => download(f),
+                text: first ? `Download ${DOC_ICON[f.ext] || f.ext}` : DOC_ICON[f.ext] || f.ext }); }),
+          ]),
+        ]));
+      }
+      p.appendChild(grid);
+    }
+    p.appendChild(el("p", { class: "muted", style: "margin-top:18px", text: "Files are packed into this page when it is generated, so they match the dashboard you are looking at. Regenerate the page after the pipeline rebuilds a document." }));
+  }
+
+  // ---------- Tailor to a job ----------
+  const tailorDraft = { company: "", role: "", url: "", base: "general", jd: "" };
+  let tailorBusy = false;
+  function tailorResult(r, open) {
+    const by = (st) => r.keywords.filter((k) => k.status === st).map((k) => k.term);
+    const passed = r.checks.filter((c) => c.pass).length;
+    const delta = r.before == null ? "" : ` (base resume: ${r.before}%)`;
+    const head = [el("div", { class: "meta" }, [pill(r.after >= r.pass_mark && passed === r.checks.length ? "Pass" : "Needs work", r.after >= r.pass_mark ? "green" : "amber"),
+      el("span", { class: "muted", text: `${r.date} · from ${r.base_label || r.base}` }), r.stale ? pill("Base resume changed since: rebuild", "amber") : null]),
+      el("h3", { text: `${r.role} at ${r.company}` })];
+    const body = [
+      el("p", { class: "why", text: `ATS against this job ad: ${r.after}%${delta}, pass mark ${r.pass_mark}%. Format checks ${passed}/${r.checks.length}.` }),
+      el("div", { class: "kw-grid" }, [
+        el("div", null, [el("b", { text: "On the resume" }), el("div", { class: "row", style: "margin-top:6px" }, by("on resume").map((t) => pill(t, "green")))]),
+        el("div", null, [el("b", { text: "Added from your documents" }), el("div", { class: "row", style: "margin-top:6px" }, by("added from your documents").length ? by("added from your documents").map((t) => pill(t, "green")) : [el("span", { class: "muted", text: "none" })])]),
+        el("div", null, [el("b", { text: "Gaps, not claimed" }), el("div", { class: "row", style: "margin-top:6px" }, r.gaps.length ? r.gaps.map((t) => pill(t, "amber")) : [el("span", { class: "muted", text: "none" })])]),
+      ]),
+      r.gaps.length ? el("p", { class: "muted", text: "Gaps stay off the resume: address true ones in a cover letter, or learn them first. If one is real experience your documents leave out, confirm it in the ledger and tailor again." }) : null,
+      ...(r.warnings || []).map((w) => el("p", { class: "doc-warn", text: w })),
+      el("div", { class: "links" }, [
+        ...r.files.map((f, i) => el("button", { class: i === 0 ? "primary" : "", title: f.name, onclick: () => download(f), text: `Download ${DOC_ICON[f.ext] || f.ext}` })),
+        !r.files.length ? el("span", { class: "muted", text: `Files are in outputs/resume/tailored/${r.folder}/` }) : null,
+        safeUrl(r.url) ? el("a", { class: "btn", href: r.url, target: "_blank", rel: "noopener", text: "Open job ad \u2197" }) : null,
+        el("button", { text: "Copy cover-letter request", onclick: () => copy(`Write a tailored cover letter for ${DATA.slug}: ${r.role} at ${r.company}. The job description is in outputs/resume/tailored/${r.folder}/jd.md; use the tailored resume in that folder.`, "Request for Claude") }),
+      ]),
+    ];
+    return el("article", { class: "card" }, open ? [...head, ...body] : [...head, el("details", null, [el("summary", { text: "Keywords and downloads" }), ...body])]);
+  }
+  function renderTailor() {
+    const p = $("p-tailor"); p.replaceChildren();
+    p.appendChild(el("h2", { class: "sec", text: "Tailor the resume to a job" }));
+    p.appendChild(el("p", { class: "lede", text: "Paste a job ad and get a resume reordered for it, using only what your own documents prove. Anything else the ad asks for is listed as a gap, never added." }));
+    const f = tailorDraft;
+    const input = (key, label, ph, type) => el("label", null, [label, el("input", { type: type || "text", value: f[key], placeholder: ph || "", oninput: (e) => { f[key] = e.target.value; } })]);
+    const bases = [["general", "General resume"], ...(DATA.variants || []).filter((v) => v.in_use && v.ats).map((v) => [v.id, "Role resume: " + v.title])];
+    const baseSel = el("select", { onchange: (e) => { f.base = e.target.value; } }, bases.map(([v, t]) => el("option", { value: v, text: t, selected: f.base === v ? "selected" : null })));
+    const jd = el("textarea", { class: "jd", placeholder: "Paste the full job description: responsibilities, requirements, nice-to-haves.", oninput: (e) => { f.jd = e.target.value; } });
+    jd.value = f.jd;
+    const status = el("p", { class: "muted", role: "status", "aria-live": "polite" });
+    const cmd = () => `${PY("tailor.py")} tailor ${DATA.slug} --company "${f.company.replace(/["\\$`]/g, "")}" --role "${f.role.replace(/["\\$`]/g, "")}" --base ${f.base} --jd-file jd.txt` + (safeUrl(f.url) ? ` --url "${f.url.replace(/["\\$`]/g, "")}"` : "");
+    const build = async () => {
+      if (!f.company.trim() || !f.role.trim()) return toast("Add the company and the role");
+      if (f.jd.trim().length < 200) return toast("Paste the full job description");
+      tailorBusy = true; status.textContent = "Building the tailored resume (about 10 seconds)\u2026"; btn.disabled = true;
+      try {
+        const r = await post({ action: "tailor", company: f.company, role: f.role, url: f.url, base: f.base, jd: f.jd });
+        if (r.ok) { toast("Tailored resume ready"); location.hash = "#tailor"; location.reload(); return; }
+        status.textContent = "Not built: " + (r.error || r.detail || `HTTP ${r.http}`);
+      } catch (e) { status.textContent = "The local server isn't responding. Restart it, or use the command below."; }
+      tailorBusy = false; btn.disabled = false;
+    };
+    const btn = el("button", { class: "primary", text: "Build tailored resume", onclick: build, disabled: API ? null : "disabled",
+      title: API ? null : "Needs the local dashboard server" });
+    p.appendChild(el("div", { class: "card" }, [
+      el("div", { class: "form wide" }, [input("company", "Company", "e.g. PayPal"), input("role", "Role", "as written in the ad"), input("url", "Job link (optional)", "https://\u2026", "url"),
+        el("label", null, ["Start from", baseSel])]),
+      el("label", { style: "display:grid;gap:5px;font-size:12.5px;color:var(--ink-2);margin-top:12px" }, ["Job description", jd]),
+      el("div", { class: "form-actions" }, [API ? btn : null,
+        el("button", { class: API ? "" : "primary", text: "Copy message for Claude", onclick: () => copy(`Tailor ${DATA.slug}'s resume to this job: ${f.role} at ${f.company}${safeUrl(f.url) ? " (" + f.url + ")" : ""}, starting from the ${f.base} resume. Job description:\n\n${f.jd}`, "Message") }),
+        API ? null : el("button", { text: "Copy command", onclick: () => copy(cmd(), "Command") }), API ? null : btn]),
+      API ? status : el("p", { class: "form-hint", text: "Building here needs the local dashboard server (actions.py serve). From this file, copy the message for Claude, or save the job description as jd.txt and run the command." }),
+    ]));
+    const list = DATA.tailored || [];
+    p.appendChild(el("h2", { class: "sec", text: `Tailored resumes (${list.length})` }));
+    if (!list.length) p.appendChild(el("p", { class: "empty", text: "None yet. Each one is kept with its job description, so a reply can be traced to the version sent." }));
+    list.forEach((r, i) => p.appendChild(tailorResult(r, i === 0)));
+  }
+
+  // ---------- Lenses ----------
+  function scoreBar(s) {
+    const cls = s.value <= 2 ? "lo" : s.value === 3 ? "mid" : "hi";
+    return el("div", { class: "score" }, [el("span", { class: "lbl", text: s.name }),
+      el("div", { class: "bar " + cls, role: "img", "aria-label": `${s.value} of 5` }, [el("span", { style: `width:${s.value * 20}%` })]),
+      el("b", { text: `${s.value}/5` })]);
+  }
+  function renderLenses() {
+    const p = $("p-lenses"); p.replaceChildren();
+    const cons = DATA.review.consensus || [];
+    // A finding is settled once every action behind it is resolved or ignored (or it had none: fixed in the review itself).
+    const settled = (c) => c.actions.every((id) => !byId[id] || statusOf(byId[id]) !== "open");
+    const live = cons.filter((c) => !settled(c)), done = cons.filter(settled);
+    const row = (c) => el("tr", { class: settled(c) ? "settled" : null }, [
+      el("td", null, [pill(c.id, "id"), " ", c.finding]), el("td", { text: c.raised_by }),
+      el("td", null, [pill(c.severity, c.severity)]), el("td", { text: c.disposition }),
+      el("td", null, c.actions.length ? [el("span", { class: "row" }, c.actions.map(idChip))] : [pill("Fixed", "green")]),
+    ]);
+    const table = (rows) => el("div", { class: "tbl-wrap" }, [el("table", null, [
+      el("thead", null, [el("tr", null, ["Finding", "Raised by", "Severity", "What happens", "Actions"].map((h) => el("th", { text: h })))]),
+      el("tbody", null, rows.map(row))])]);
+    p.appendChild(el("h2", { class: "sec", text: "Consensus: raised independently by two or more reviewers" }));
+    p.appendChild(el("p", { class: "lede", text: "The highest-confidence findings that are still open. Select an ID to open the action that addresses it; \u2713 means it's done." }));
+    if (!cons.length) p.appendChild(el("p", { class: "empty", text: "No lens review yet." }));
+    else if (!live.length) p.appendChild(el("p", { class: "note ok", text: `All ${cons.length} findings are settled: every action behind them is resolved or ignored.` }));
+    else p.appendChild(table(live));
+    if (done.length) p.appendChild(el("details", { class: "settled-list", open: state.showSettled ? "" : null,
+      ontoggle: (e) => { state.showSettled = e.target.open; } }, [
+      el("summary", { text: `${done.length} settled finding${done.length === 1 ? "" : "s"} (every action done)` }), table(done)]));
+
+    p.appendChild(el("h2", { class: "sec", text: "Each reviewer" }));
+    p.appendChild(el("p", { class: "lede", text: "Each saw only the raw materials, never the earlier analysis. Scores are out of 5." }));
+    const grid = el("div", { class: "lens-grid" });
+    p.appendChild(grid);
+    for (const l of DATA.lenses) {
+      const sev = {}; l.findings.forEach((f) => { sev[f.severity] = (sev[f.severity] || 0) + 1; });
+      const findings = l.findings.slice().sort((a, b) => (SEV[a.severity] ?? 9) - (SEV[b.severity] ?? 9));
+      grid.appendChild(el("article", { class: "card" }, [
+        el("div", { class: "card-head" }, [el("div", null, [
+          el("div", { class: "meta" }, [pill(l.gates.replace(/,\s*/g, ", ")), pill(verdictWord(l.verdict) || "Verdict", verdictWord(l.verdict)), el("span", { class: "muted", text: l.date })]),
+          el("h3", { text: l.name })])]),
+        el("p", { class: "why", text: l.verdict }),
+        el("div", { style: "margin-top:10px" }, l.scores.map(scoreBar)),
+        el("div", { class: "meta", style: "margin-top:10px" }, Object.keys(SEV).filter((k) => sev[k]).map((k) => pill(`${sev[k]} ${k}`, k))),
+        el("details", null, [el("summary", { text: `Findings (${l.findings.length})` }), el("div", null, findings.map((f) => el("div", { class: "finding sev-" + f.severity }, [
+          el("div", { class: "meta" }, [pill(f.severity, f.severity), el("b", { text: f.where }),
+            /^yes/i.test(f.needs) ? pill("Needs the person", "amber") : pill("Fixable now", "green")]),
+          el("div", { class: "ev", text: f.evidence }),
+          el("div", null, [el("b", { text: "Why it hurts: " }), f.why]),
+          el("div", { style: "margin-top:4px" }, [el("b", { text: "Fix: " }), f.fix]),
+          /^yes/i.test(f.needs) && f.needs.length > 4 ? el("div", { class: "muted", style: "margin-top:4px" }, [el("b", { text: "Ask: " }), f.needs.replace(/^yes[:\s]*/i, "")]) : null,
+        ])))]),
+        l.works.length ? el("details", null, [el("summary", { text: "What works (keep it)" }), el("ul", null, l.works.map((w) => el("li", { text: w })))]) : null,
+        l.asks.length ? el("details", null, [el("summary", { text: "What this reviewer would ask in an interview" }), el("ol", null, l.asks.map((w) => el("li", { text: w })))]) : null,
+        el("div", { class: "muted", style: "font-size:12px;margin-top:10px", text: "Source: outputs/lens/" + l.file }),
+      ]));
+    }
+  }
+
+  // ---------- ATS ----------
+  function renderAts() {
+    const p = $("p-ats"); p.replaceChildren();
+    const base = DATA.ats || {};
+    if (base.resume == null) { p.appendChild(el("p", { class: "empty", text: "No ATS report yet. Run lens.py ats." })); return; }
+    const variants = DATA.variants || [];
+    const built = variants.filter((v) => v.in_use && v.ats);
+    const chosen = built.find((v) => v.id === state.atsResume);
+    const a = chosen ? { ...base, resume: chosen.ats.pct, linkedin: chosen.ats.linkedin, verdict: chosen.ats.pass ? "Pass" : "Needs work",
+      checks: chosen.ats.checks, keywords: chosen.ats.keywords, history: [] } : base;
+    if (built.length) {
+      const pick = (id, label) => el("button", { class: state.atsResume === id || (!id && !chosen) ? "primary" : "", "aria-pressed": String(state.atsResume === id || (!id && !chosen)), text: label,
+        onclick: () => { state.atsResume = id; renderAts(); } });
+      p.appendChild(el("h2", { class: "sec", text: "Which resume" }));
+      p.appendChild(el("p", { class: "lede", text: "Each resume is scored against the keywords for its own role. Pick one to see its coverage and every keyword below." }));
+      p.appendChild(el("div", { class: "links" }, [pick(null, "General"), ...built.map((v) => pick(v.id, v.title))]));
+    }
+    const meter = (k, v, d, mark) => el("div", { class: "meter-card" }, [
+      el("div", { class: "k", text: k }), el("div", { class: "v", text: v + "%" }),
+      el("div", { class: "meter" + (mark && v < mark ? " below" : ""), role: "img", "aria-label": `${v}% of 100${mark ? `, pass mark ${mark}%` : ""}` }, [
+        el("span", { style: `width:${Math.max(0, Math.min(100, v))}%` }), mark ? el("i", { class: "tick", style: `left:calc(${mark}% - 1px)`, title: `pass mark ${mark}%` }) : null]),
+      el("div", { class: "meter-scale" }, [el("span", { class: "lo", text: "0" }), mark && mark > 12 && mark < 88 ? el("span", { class: "mark", style: `left:${mark}%`, text: `pass ${mark}` }) : null, el("span", { class: "hi", text: "100" })]),
+      el("div", { class: "d", text: d })]);
+    const passed = a.checks.filter((c) => c.pass).length;
+    const basePassed = base.checks.filter((c) => c.pass).length;
+    p.appendChild(el("h2", { class: "sec", text: chosen ? `Keyword coverage: ${chosen.title}` : "Keyword coverage" }));
+    if (chosen && chosen.keywords_from !== "job ads") p.appendChild(el("p", { class: "doc-warn", text: "Scored against a generic keyword list for this role, not real job ads." }));
+    p.appendChild(el("p", { class: "lede", text: "Weighted against the keywords target job ads ask for. The resume score is what an ATS sees; the LinkedIn score is what recruiter search sees." }));
+    p.appendChild(el("div", { class: "meters panel-set" }, [
+      meter("Resume (gate G2)", a.resume, `${a.verdict || ""} against the pass mark`, a.pass_mark),
+      a.linkedin == null ? null : meter("LinkedIn (gate G1)", a.linkedin, "raise it with the quick wins below", a.pass_mark),
+      meter("Format checks", Math.round((passed / (a.checks.length || 1)) * 100), `${passed} of ${a.checks.length} pass` + (a.checks.some((c) => !c.pass) ? `: failing ${a.checks.filter((c) => !c.pass).map((c) => c.name).join("; ")}` : ""), null),
+    ]));
+
+    if (variants.length) {
+      p.appendChild(el("h2", { class: "sec", text: "Role-specific resumes" }));
+      p.appendChild(el("p", { class: "lede", text: "Which roles this profile can honestly support. Fit is scored from the person's own documents, not from the generated resumes, so a role only gets a resume where the experience is really there." }));
+      p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+        el("thead", null, [el("tr", null, ["Role", "Profile fit", "Must-haves", "Verdict", "Resume ATS", "Missing (from the resume if built, otherwise from the profile)"].map((h) => el("th", { text: h })))]),
+        el("tbody", null, [el("tr", null, [
+          el("td", null, ["General resume ", pill("in use", "green")]), el("td", { class: "num", text: "-" }), el("td", { class: "num", text: "-" }), el("td", { class: "muted", text: "-" }),
+          el("td", { class: "num", text: `${base.resume}%, checks ${basePassed}/${base.checks.length}` }),
+          el("td", { class: "muted", text: base.keywords.filter((k) => !k.resume).map((k) => k.term).join(", ") || "none" }),
+        ]), ...variants.map((v) => el("tr", null, [
+          el("td", null, [v.title, v.in_use ? " " : null, v.in_use ? pill("in use", "green") : null]),
+          el("td", { class: "num", text: v.fit + "%" }), el("td", { class: "num", text: v.must + "%" }),
+          el("td", null, [pill(v.verdict, { fit: "green", stretch: "amber" }[v.verdict] || "")]),
+          el("td", { class: "num", text: v.ats ? `${v.ats.pct}%, checks ${v.ats.checks_passed}/${v.ats.checks_total}` : "-" }),
+          el("td", { class: "muted", text: (v.ats ? v.ats.missing : v.missing).join(", ") || "none" }),
+        ]))])])]));
+    }
+
+    const skillsUrl = safeUrl(DATA.linkedin_url) ? DATA.linkedin_url.replace(/\/?$/, "/") + "details/skills/" : null;
+    const liGaps = a.keywords.filter((k) => k.resume > 0 && k.linkedin === 0);
+    p.appendChild(el("h2", { class: "sec", text: "Quick win: on the resume, missing on LinkedIn" }));
+    if (!liGaps.length) p.appendChild(el("p", { class: "muted", text: "None. LinkedIn covers everything the resume proves." }));
+    else p.appendChild(el("div", { class: "card" }, [
+      el("p", { class: "why", style: "margin-top:0", text: `${liGaps.length} keyword${liGaps.length === 1 ? "" : "s"} the resume already backs up but LinkedIn search can't find. Select one to copy it, then add it as a skill (pick LinkedIn's suggestion) or work it into the About or experience text.` }),
+      el("div", { class: "kw-copy", role: "group", "aria-label": "Select a skill to copy it" }, liGaps.map((k) =>
+        el("button", { title: "Copy " + k.term, "aria-label": "Copy " + k.term, onclick: () => copy(k.term, k.term) }, [k.term]))),
+      el("div", { class: "links" }, [copyBtn(liGaps.map((k) => k.term).join("\n"), "All missing skills", "Copy all"),
+        skillsUrl ? el("a", { class: "btn primary", href: skillsUrl, target: "_blank", rel: "noopener", text: "Open LinkedIn skills \u2197" }) : null])]));
+
+    p.appendChild(el("h2", { class: "sec", text: "Every keyword" }));
+    p.appendChild(el("p", { class: "muted", text: "Weight 3 = most target job ads require it. Add a missing keyword only where the skill is real: coverage bought with untrue keywords fails at the technical round instead." }));
+    const rows = a.keywords.slice().sort((x, y) => y.weight - x.weight || (x.resume > 0) - (y.resume > 0));
+    const cell = (v) => (v === null ? el("td", { class: "muted", text: "n/a" }) : v === 0 ? el("td", { class: "miss", text: "missing" }) : el("td", { class: "num", text: `found \u00d7${v}` }));
+    p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+      el("thead", null, [el("tr", null, ["Keyword", "Weight", "Resume", "LinkedIn", "Next step"].map((h) => el("th", { text: h })))]),
+      el("tbody", null, rows.map((k) => el("tr", null, [el("td", { text: k.term }), el("td", { class: "num", text: String(k.weight) }), cell(k.resume), cell(k.linkedin),
+        el("td", null, [k.resume > 0 && k.linkedin === 0 ? el("span", { class: "row", style: "gap:4px" }, [el("span", { text: "Add to LinkedIn" }), copyBtn(k.term, k.term)])
+          : k.resume === 0 ? el("span", { class: "muted", text: k.weight >= 2 ? "Gap: add only if true, or learn it (learning plan)" : "Optional" }) : el("span", { class: "muted", text: "Covered" })]),
+      ])))])]));
+
+    if (a.history && a.history.length) {
+      p.appendChild(el("h2", { class: "sec", text: "Score history" }));
+      p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+        el("thead", null, [el("tr", null, ["Date", "Resume", "LinkedIn", "Format checks", "Source"].map((h) => el("th", { text: h })))]),
+        el("tbody", null, a.history.map((h) => el("tr", null, [el("td", { text: h.date }), el("td", { class: "num", text: h.resume + "%" }),
+          el("td", { class: "num", text: h.linkedin + "%" }), el("td", { text: h.checks }), el("td", { class: "muted", text: h.source })])))])]));
+    }
+  }
+
+  // ---------- Funnel ----------
+  const COLS = FW.funnel.columns;
+  // Local-date arithmetic throughout: toISOString() would shift the day in timezones ahead of UTC.
+  const mondayOf = (d) => {
+    const m = typeof d === "string" && d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const x = m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(d);
+    x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+  };
+  let draft = null;
+  function totals(weeks) { const t = {}; COLS.forEach((c) => { t[c.key] = weeks.reduce((s, w) => s + (w[c.key] || 0), 0); }); return t; }
+  function diagnose(weeks) {
+    const t = totals(weeks);
+    const stages = FW.funnel.stages.map((s) => ({ ...s, from_n: t[s.from], to_n: t[s.to],
+      rate: t[s.from] ? t[s.to] / t[s.from] : null, enough: t[s.from] >= s.min_volume }));
+    const ready = stages.filter((s) => s.enough);
+    // Zero conversion first; then the stage furthest below its warning line (works with one ready stage);
+    // stages without a warning line fall back to the lowest of several. A stage above its line is never called a leak.
+    const below = ready.filter((s) => s.floor != null && s.rate < s.floor).sort((x, y) => x.rate / x.floor - y.rate / y.floor);
+    const unlined = ready.filter((s) => s.floor == null);
+    let leak = ready.find((s) => s.to_n === 0) || below[0] || null;
+    if (!leak && unlined.length > 1) leak = unlined.slice().sort((x, y) => x.rate - y.rate)[0];
+    return { t, stages, leak, ready };
+  }
+  const colLabel = (k) => (COLS.find((c) => c.key === k) || { label: k }).label;
+  function renderFunnel() {
+    const p = $("p-funnel"); p.replaceChildren();
+    const weeks = DATA.funnel.slice();
+    if (draft) { const i = weeks.findIndex((w) => w.week === draft.week); if (i >= 0) weeks[i] = draft; else weeks.push(draft); weeks.sort((a, b) => a.week.localeCompare(b.week)); }
+    const d = diagnose(weeks);
+
+    p.appendChild(el("h2", { class: "sec", text: "Diagnosis" }));
+    let dx;
+    if (!weeks.length) dx = el("div", { class: "card diag" }, [el("b", { text: "No applications logged yet." }),
+      el("p", { class: "why", text: "Start logging once applications begin (form below). The diagnosis needs volume to mean anything: about 20 applications before it names a leaking gate. Until then, the readiness scorecard on the Overview tab is the guide." })]);
+    else if (!d.ready.length) dx = el("div", { class: "card diag amber" }, [el("b", { text: "Not enough volume yet." }),
+      el("p", { class: "why", text: `${d.t.applications} application(s) logged. The first stage needs ${FW.funnel.stages[0].min_volume} before conversion is meaningful. Keep applying and logging.` })]);
+    else if (d.leak) {
+      const g = d.leak.gate.split("-")[0];
+      const gi = GATE[g] || {};
+      dx = el("div", { class: "card diag red" }, [
+        el("div", { class: "meta" }, [pill("Leaking", "red"), pill(d.leak.gate)]),
+        el("h3", { text: `${colLabel(d.leak.from)} \u2192 ${colLabel(d.leak.to)}: ${d.leak.to_n} of ${d.leak.from_n} (${Math.round((d.leak.rate || 0) * 100)}%)` }),
+        d.leak.floor != null && d.leak.to_n > 0 && d.leak.rate < d.leak.floor ? el("p", { class: "why", text: `Below ${Math.round(d.leak.floor * 100)}%, the warning line this page uses for this step. It's a rough guide, not a benchmark.` }) : null,
+        el("p", { class: "why", text: (gi.when_it_leaks || "") + " Compare with your own previous weeks, not with industry numbers." }),
+        el("div", { class: "links" }, d.leak.gate.split("-").map((x) => el("button", { class: "primary", text: `Open ${x} actions`, onclick: () => toGate(x) })))]);
+    } else dx = el("div", { class: "card diag green" }, [el("b", { text: "No stage stands out as leaking." }), el("p", { class: "why", text: "Keep the weekly cadence and keep logging." })]);
+    p.appendChild(dx);
+
+    p.appendChild(el("h2", { class: "sec", text: "Log a week" }));
+    const wk = el("input", { type: "date", id: "f-week", value: draft ? draft.week : mondayOf(new Date()) });
+    const inputs = COLS.map((c) => el("input", { type: "number", min: "0", step: "1", id: "f-" + c.key, value: draft ? String(draft[c.key] || 0) : "0", inputmode: "numeric" }));
+    const notes = el("input", { type: "text", id: "f-notes", value: draft ? draft.notes || "" : "", placeholder: "optional" });
+    const read = () => { const w = { week: mondayOf(wk.value || new Date()), notes: notes.value.trim() };
+      COLS.forEach((c, i) => { w[c.key] = Math.max(0, parseInt(inputs[i].value || "0", 10) || 0); }); return w; };
+    const cmd = (w) => `${PY("actions.py")} funnel ${DATA.slug} week=${w.week} ` + COLS.map((c) => `${c.key}=${w[c.key]}`).join(" ") + (w.notes ? ` notes="${w.notes.replace(/["\\$`]/g, "")}"` : "");
+    p.appendChild(el("div", { class: "card" }, [
+      el("p", { class: "why", style: "margin:0 0 14px", text: "That week's counts only; the page adds the weeks up. Any day picks its week (saved as the Monday). Preview updates the diagnosis. " + (API ? "Save week writes it to the database and funnel.md." : "From this file, the copy buttons are how it gets saved to funnel.md.") }),
+      el("div", { class: "form" }, [el("label", null, ["Week of", wk]),
+        ...COLS.map((c, i) => el("label", null, [c.label, inputs[i]])), el("label", null, ["Notes", notes])]),
+      el("div", { class: "form-actions" }, [
+        el("button", { text: "Preview diagnosis", onclick: () => { draft = read(); render(); } }),
+        API ? el("button", { class: "primary", text: "Save week", onclick: async () => {
+            const w = read(); const counts = {}; COLS.forEach((c) => { counts[c.key] = w[c.key]; });
+            try {
+              const r = await post({ action: "log_week", week: w.week, counts, notes: w.notes });
+              logLocal({ kind: "funnel", target: w.week, payload: { counts }, state: r.state || "rejected", detail: r.detail || r.error || "" });
+              if (r.ok) { const i = DATA.funnel.findIndex((x) => x.week === w.week); if (i >= 0) DATA.funnel[i] = w; else DATA.funnel.push(w);
+                DATA.funnel.sort((a, b) => a.week.localeCompare(b.week)); draft = null; render(); toast(`Week of ${w.week} saved`); }
+              else toast(`Not saved: ${r.detail || r.error}`);
+            } catch (e) { toast("The local server isn't responding. Use Copy save command instead."); }
+          } }) : null,
+        el("button", { class: API ? "" : "primary", text: "Copy save command", onclick: () => copy(cmd(read()), "Save command") }),
+        el("button", { text: "Copy message for Claude", onclick: () => { const w = read(); copy(`Log this funnel week for ${DATA.slug}: week=${w.week} ` + COLS.map((c) => `${c.key}=${w[c.key]}`).join(" ") + (w.notes ? ` notes: ${w.notes}` : ""), "Message"); } }),
+        draft ? el("button", { text: "Clear preview", onclick: () => { draft = null; render(); } }) : null])]));
+
+    p.appendChild(el("h2", { class: "sec", text: "Conversion (all weeks)" }));
+    p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+      el("thead", null, [el("tr", null, ["Step", "Gate", "Converted", "Rate", "Enough data?"].map((h) => el("th", { text: h })))]),
+      el("tbody", null, d.stages.map((s) => el("tr", null, [el("td", { text: `${colLabel(s.from)} \u2192 ${colLabel(s.to)}` }), el("td", { text: s.gate }),
+        el("td", { class: "num", text: `${s.to_n} / ${s.from_n}` }), el("td", null, [s.rate === null ? el("span", { class: "muted", text: "\u2013" }) : el("div", { class: "rate" }, [el("div", { class: "bar " + (s.rate === 0 || s.rate < (s.floor ?? 0.25) ? "lo" : s.rate < (s.floor ?? 0.25) * 1.5 ? "mid" : "hi") }, [el("span", { style: `width:${Math.round(s.rate * 100)}%` })]), el("span", { class: "num", text: Math.round(s.rate * 100) + "%" })])]),
+        el("td", { text: s.enough ? "Yes" : `Needs ${s.min_volume}+ ${colLabel(s.from).toLowerCase()}` })])))])]));
+    p.appendChild(el("p", { class: "muted", text: `Recruiter-side (G1): ${d.t.profile_views || 0} profile views and ${d.t.inmails || 0} InMails logged. LinkedIn shows these under the profile's Analytics.` }));
+
+    if (weeks.length) {
+      p.appendChild(el("h2", { class: "sec", text: "Weekly log" }));
+      p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+        el("thead", null, [el("tr", null, ["Week of", ...COLS.map((c) => c.label), "Notes"].map((h) => el("th", { text: h })))]),
+        el("tbody", null, weeks.map((w) => el("tr", null, [el("td", null, [w.week, draft && w === draft ? el("span", { class: "unsaved", text: " (not saved)" }) : null]),
+          ...COLS.map((c) => el("td", { class: "num", text: String(w[c.key] || 0) })), el("td", { class: "muted", text: w.notes || "" })])))])]));
+    }
+
+  }
+
+  // ---------- Framework ----------
+  function renderFramework() {
+    const p = $("p-framework"); p.replaceChildren();
+    p.appendChild(el("h2", { class: "sec", text: "The hiring funnel" }));
+    p.appendChild(el("p", { class: "muted", text: "A job search fails at a specific gate. Polishing the resume does nothing for someone who is never found; interview prep does nothing for someone filtered out by the ATS. Find the earliest Red gate and fix that first." }));
+    p.appendChild(el("div", { class: "tbl-wrap" }, [el("table", null, [
+      el("thead", null, [el("tr", null, ["Gate", "Who decides", "On what", "Tested by", "Status", "When it leaks", ""].map((h) => el("th", { text: h })))]),
+      el("tbody", null, FW.gates.map((g) => { const c = CARD[g.id]; return el("tr", null, [
+        el("td", null, [el("b", { text: `${g.id} ${g.name}` })]), el("td", { text: g.decides }), el("td", { text: g.decides_on }), el("td", { text: g.tested_by }),
+        el("td", null, [c ? pill(c.status[0].toUpperCase() + c.status.slice(1), statusClass(c.status)) : pill("n/a")]),
+        el("td", { text: g.when_it_leaks }),
+        el("td", null, [c && c.actions.length ? el("button", { class: "small", text: "Actions", onclick: () => toGate(g.id) }) : null])]); }))])]));
+    p.appendChild(el("h2", { class: "sec", text: "Rules" }));
+    p.appendChild(el("div", { class: "card" }, [el("ul", { style: "margin:0;padding-left:20px" }, [
+      el("li", { text: "Green: the lens would advance the candidate, with no Critical or High findings open. Amber: borderline, or High findings that are fixable. Red: a reject verdict or a Critical finding." }),
+      el("li", { text: "Work the earliest Red gate first. Exception: a Red background-check gate (G8) is fixed before the first offer, because a failed check costs the offer itself." }),
+      el("li", { text: "Order of work for a new person: positioning and true facts first; then ATS and LinkedIn findability (cheap, mechanical); then the resume, guided by the lens review; then interview prep in parallel with applications; negotiation prep before the first final round." }),
+      el("li", { text: "Funnel diagnosis: " + (FW.funnel._rule || "") }),
+      el("li", { text: "Integrity: no invented numbers, and every claim must survive an interview and a background check. Coverage or polish bought with untrue claims just moves the rejection to a later, costlier gate." }),
+    ])]));
+  }
+
+  // ---------- render ----------
+  function render() {
+    const openCount = DATA.items.filter((i) => statusOf(i) === "open").length;
+    $("tabs").replaceChildren(...TABS.map(([id, label]) => el("button", { role: "tab", id: "t-" + id, "aria-selected": String(state.tab === id), "aria-controls": "p-" + id, onclick: () => go(id) },
+      [label, id === "actions" ? el("span", { class: "count-badge", text: String(openCount) }) : null])));
+    TABS.forEach(([id]) => { $("p-" + id).hidden = state.tab !== id; });
+    ({ overview: renderOverview, actions: renderActions, documents: renderDocuments, tailor: renderTailor, lenses: renderLenses, ats: renderAts, funnel: renderFunnel, framework: renderFramework })[state.tab]();
+    const changes = Object.entries(overrides);
+    $("pending").hidden = !changes.length;
+    if (changes.length) $("pendingMsg").textContent = `${changes.length} status change${changes.length > 1 ? "s" : ""} not saved to the source files yet.`;
+    $("copyCmd").textContent = API ? "Save to database" : "Copy update command";
+  }
+  const pairs = () => Object.entries(overrides).map(([id, o]) => `${id}=${o.status}`).join(" ");
+  $("copyCmd").onclick = async () => {
+    if (!API) { copy(`${PY("actions.py")} set ${DATA.slug} ${pairs()}`, "Update command");
+      $("pendingMsg").textContent = "Command copied. Paste it into a terminal opened in the workspace folder and press Enter; that saves the change. Or start the local server (How to use this page) to save straight from here.";
+      return; }
+    let saved = 0, failed = [];
+    for (const [id, o] of Object.entries(overrides)) {
+      const it = byId[id]; if (!it) continue;
+      const r = await saveStatus(it, o.status, o.base);
+      if (r.ok) saved++; else failed.push(r.msg);
+    }
+    render(); toast(failed.length ? `${saved} saved, ${failed.length} not saved` : `${saved} change${saved === 1 ? "" : "s"} saved`);
+  };
+  $("copyMsg").onclick = () => { copy(`Apply these action statuses for ${DATA.slug} and re-render the dashboard: ${pairs()}`, "Message");
+    $("pendingMsg").textContent = "Message copied. Paste it to Claude in this workspace; it applies the change and re-renders this page."; };
+  $("discard").onclick = () => { overrides = {}; save(overrides); render(); toast("Changes discarded"); };
+  $("q").addEventListener("input", (e) => { state.q = e.target.value; renderActions(); });
+  $("filterBtn").addEventListener("click", () => { state.filters = !state.filters; renderActions(); });
+  $("helpBtn").onclick = () => { const h = $("help"); h.hidden = !h.hidden; $("helpBtn").setAttribute("aria-expanded", String(!h.hidden)); };
+  $("themeBtn").onclick = () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("actions:theme", root.dataset.theme); } catch (e) {}
+  };
+  try { const t = localStorage.getItem("actions:theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  $("serveCmd").textContent = `${PY("actions.py")} serve ${DATA.slug}`;
+  document.title = `${DATA.name}: job search dashboard`;
+  $("title").textContent = DATA.name;
+  $("sub").textContent = `Generated ${DATA.generated}\n${DATA.items.length} actions \u00b7 ${DATA.lenses.length} reviewers \u00b7 ${(DATA.ats.keywords || []).length} keywords`;
+  $("sub").style.whiteSpace = "pre-line";
+  const tg = DATA.target || {};
+  $("target").replaceChildren(...[["Targeting", (tg.target_titles || []).slice(0, 2).join(" / ")], ["In", (tg.locations || []).join(", ")], ["Domain", (tg.domains || []).join(", ")]]
+    .filter(([, v]) => v).map(([k, v]) => el("span", null, [k + " ", el("b", { text: v })])));
+  const h = (location.hash || "").slice(1);
+  if (TABS.some(([id]) => id === h)) state.tab = h;
+  render();
+})();
+</script>
+</body>
+</html>

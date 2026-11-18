@@ -1,0 +1,11 @@
+# Personal data never belongs in this repository
+people/
+raw/
+*.sqlite
+
+# Build output and local tooling
+dist/
+__pycache__/
+*.pyc
+.DS_Store
+.oil-ui/

@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I \"$CLAUDE_PROJECT_DIR/.claude/skills/resume-pipeline/scripts/pipeline.py\" --root \"$CLAUDE_PROJECT_DIR\" brief --hook 2>/dev/null || true",
+            "timeout": 20,
+            "statusMessage": "Checking job-search packs for pending updates"
+          }
+        ]
+      }
+    ]
+  }
+}

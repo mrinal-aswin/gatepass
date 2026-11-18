@@ -1,0 +1,110 @@
+{
+  "_note": "Generic screening keywords per role family: enough to tell which resumes a profile can honestly support, before any job research. Once a family is in use, the market stage replaces these with keywords from real job ads (target.json variants[].keywords). Adding a family is a data change here, not a code change. Avoid aliases that are common English words: matching is case-insensitive. \"label\": true marks a term that is a category name rather than a skill (Databases, Delivery), so only its aliases count as evidence.",
+  "frontend": {
+    "title": "Frontend Engineer", "titles": ["Frontend Engineer", "Frontend Developer", "UI Engineer"],
+    "keywords": [
+      {"term": "JavaScript", "weight": 3, "aliases": ["TypeScript", "ES6"]},
+      {"term": "React", "weight": 3, "aliases": ["React.js", "ReactJS", "Angular", "Vue", "Vue.js", "Next.js"]},
+      {"term": "HTML", "weight": 3, "aliases": ["HTML5", "CSS", "CSS3", "SCSS", "Tailwind"]},
+      {"term": "State management", "weight": 2, "aliases": ["Redux", "Zustand", "MobX", "Context API"]},
+      {"term": "Frontend testing", "weight": 2, "aliases": ["Jest", "Vitest", "Cypress", "Playwright", "React Testing Library"], "label": true},
+      {"term": "Web performance", "weight": 2, "aliases": ["Core Web Vitals", "Lighthouse", "lazy loading", "code splitting", "performance optimization"], "label": true},
+      {"term": "Accessibility", "weight": 1, "aliases": ["WCAG", "a11y"]},
+      {"term": "Design systems", "weight": 1, "aliases": ["design system", "component library", "component libraries", "Storybook"]},
+      {"term": "Micro-frontends", "weight": 1, "aliases": ["micro-frontend", "Module Federation"]},
+      {"term": "Build tooling", "weight": 1, "aliases": ["Webpack", "Vite"], "label": true}
+    ]
+  },
+  "backend": {
+    "title": "Backend Engineer", "titles": ["Backend Engineer", "Backend Developer", "Software Engineer (Backend)"],
+    "keywords": [
+      {"term": "Server-side language", "weight": 3, "aliases": ["Java", "Golang", "Python", "C#", "Kotlin", "Node.js", "NodeJS"], "label": true},
+      {"term": "Backend framework", "weight": 3, "aliases": ["Spring Boot", "Spring", "Django", "FastAPI", "Express", "NestJS", ".NET"], "label": true},
+      {"term": "Databases", "weight": 3, "aliases": ["SQL", "PostgreSQL", "MySQL", "Oracle", "MongoDB", "DynamoDB"], "label": true},
+      {"term": "API design", "weight": 2, "aliases": ["REST API", "REST APIs", "RESTful", "GraphQL", "gRPC"]},
+      {"term": "Microservices", "weight": 2, "aliases": ["microservice", "distributed systems", "event-driven"]},
+      {"term": "Messaging and caching", "weight": 2, "aliases": ["Kafka", "RabbitMQ", "Redis", "SQS"], "label": true},
+      {"term": "Backend testing", "weight": 1, "aliases": ["JUnit", "integration testing", "pytest"], "label": true},
+      {"term": "Containers and cloud", "weight": 1, "aliases": ["Docker", "Kubernetes", "AWS", "GCP", "Azure"], "label": true},
+      {"term": "Observability", "weight": 1, "aliases": ["Prometheus", "Grafana", "Datadog", "OpenTelemetry"]}
+    ]
+  },
+  "fullstack": {
+    "title": "Full Stack Engineer", "titles": ["Full Stack Engineer", "Full Stack Developer", "Software Engineer (Full Stack)"],
+    "keywords": [
+      {"term": "Frontend framework", "weight": 3, "aliases": ["React", "React.js", "ReactJS", "Angular", "Vue", "Next.js"], "label": true},
+      {"term": "Server-side language", "weight": 3, "aliases": ["Node.js", "NodeJS", "Java", "Python", "Golang", "C#", "Spring Boot", "Express", "Django", "FastAPI"], "label": true},
+      {"term": "Databases", "weight": 3, "aliases": ["SQL", "PostgreSQL", "MySQL", "Oracle", "MongoDB"], "label": true},
+      {"term": "JavaScript", "weight": 2, "aliases": ["TypeScript"]},
+      {"term": "API design", "weight": 2, "aliases": ["REST API", "REST APIs", "RESTful", "GraphQL"]},
+      {"term": "HTML", "weight": 1, "aliases": ["HTML5", "CSS", "CSS3", "Tailwind"]},
+      {"term": "Testing", "weight": 1, "aliases": ["Jest", "JUnit", "Cypress", "Playwright", "unit testing"], "label": true},
+      {"term": "Delivery", "weight": 1, "aliases": ["CI/CD", "Docker", "AWS", "Kubernetes"], "label": true}
+    ]
+  },
+  "mobile": {
+    "title": "Mobile Engineer", "titles": ["Mobile Engineer", "Mobile Developer", "Android Engineer", "iOS Engineer"],
+    "keywords": [
+      {"term": "Mobile platform", "weight": 3, "aliases": ["Android", "iOS", "React Native", "Flutter"], "label": true},
+      {"term": "Mobile language", "weight": 3, "aliases": ["Kotlin", "Swift", "Dart"], "label": true},
+      {"term": "App architecture", "weight": 2, "aliases": ["MVVM", "Jetpack Compose", "SwiftUI"], "label": true},
+      {"term": "API design", "weight": 1, "aliases": ["REST API", "REST APIs", "GraphQL"]},
+      {"term": "App release", "weight": 1, "aliases": ["Play Store", "App Store", "Firebase"], "label": true}
+    ]
+  },
+  "devops": {
+    "title": "DevOps Engineer", "titles": ["DevOps Engineer", "Site Reliability Engineer", "Platform Engineer"],
+    "keywords": [
+      {"term": "Cloud", "weight": 3, "aliases": ["AWS", "GCP", "Azure"], "label": true},
+      {"term": "Containers", "weight": 3, "aliases": ["Docker", "Kubernetes", "EKS", "GKE"], "label": true},
+      {"term": "Infrastructure as code", "weight": 3, "aliases": ["Terraform", "CloudFormation", "Pulumi", "Ansible"]},
+      {"term": "CI/CD", "weight": 2, "aliases": ["Jenkins", "GitHub Actions", "GitLab CI", "ArgoCD"]},
+      {"term": "Observability", "weight": 2, "aliases": ["Prometheus", "Grafana", "Datadog", "ELK"]},
+      {"term": "Linux", "weight": 1, "aliases": ["Bash", "shell scripting"]}
+    ]
+  },
+  "data": {
+    "title": "Data Engineer", "titles": ["Data Engineer", "Analytics Engineer"],
+    "keywords": [
+      {"term": "SQL", "weight": 3, "aliases": ["PostgreSQL", "BigQuery", "Snowflake", "Redshift"]},
+      {"term": "Python", "weight": 3, "aliases": ["PySpark", "Scala"]},
+      {"term": "Data pipelines", "weight": 3, "aliases": ["ETL", "ELT", "Airflow", "dbt", "Spark"], "label": true},
+      {"term": "Streaming", "weight": 1, "aliases": ["Kafka", "Flink"], "label": true},
+      {"term": "Data modelling", "weight": 1, "aliases": ["data warehouse", "data modeling"]}
+    ]
+  },
+  "engineering-manager": {
+    "title": "Engineering Manager", "titles": ["Engineering Manager", "Senior Engineering Manager", "Head of Engineering"],
+    "keywords": [
+      {"term": "Engineering management", "weight": 3, "aliases": ["Engineering Manager", "people management", "led a team"]},
+      {"term": "Hiring", "weight": 3, "aliases": ["recruiting", "hires"], "label": true},
+      {"term": "Delivery", "weight": 3, "aliases": ["roadmap", "Agile", "Scrum", "capacity planning"], "label": true},
+      {"term": "Mentoring", "weight": 2, "aliases": ["coaching", "performance management"]},
+      {"term": "System design", "weight": 2, "aliases": ["architecture", "microservices", "distributed systems"]},
+      {"term": "Stakeholders", "weight": 1, "aliases": ["stakeholder management", "stakeholder"], "label": true}
+    ]
+  },
+  "product-designer": {
+    "title": "Product Designer", "titles": ["Product Designer", "UX Designer", "UI/UX Designer"],
+    "keywords": [
+      {"term": "Figma", "weight": 3, "aliases": ["Sketch"]},
+      {"term": "UX design", "weight": 3, "aliases": ["UX", "product design", "interaction design"]},
+      {"term": "Prototyping", "weight": 3, "aliases": ["prototype", "prototypes", "wireframing", "wireframes"]},
+      {"term": "User research", "weight": 2, "aliases": ["user interviews", "usability testing", "usability"]},
+      {"term": "Design systems", "weight": 2, "aliases": ["design system", "component libraries"]},
+      {"term": "Visual design", "weight": 1, "aliases": ["UI design", "typography"]},
+      {"term": "Accessibility", "weight": 1, "aliases": ["WCAG"]}
+    ]
+  },
+  "design-systems": {
+    "title": "Design Systems Designer", "titles": ["Design Systems Designer", "Product Designer (Design Systems)"],
+    "keywords": [
+      {"term": "Design systems", "weight": 3, "aliases": ["design system", "design language system"]},
+      {"term": "Design tokens", "weight": 3, "aliases": ["design token", "Figma variables"]},
+      {"term": "Component libraries", "weight": 3, "aliases": ["component library", "UI components"]},
+      {"term": "Figma", "weight": 2},
+      {"term": "Documentation", "weight": 1, "aliases": ["design documentation", "Storybook"], "label": true},
+      {"term": "Accessibility", "weight": 1, "aliases": ["WCAG"]}
+    ]
+  }
+}

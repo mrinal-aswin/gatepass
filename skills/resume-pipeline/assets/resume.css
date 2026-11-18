@@ -1,0 +1,11 @@
+/* Print styles for the PDF build. Single column, real text, no decoration ATS parsers trip on. */
+@page { size: A4; margin: 11mm 14mm; }
+body { font-family: "Calibri", "Carlito", "Arial", sans-serif; font-size: 10.5pt; line-height: 1.25; color: #111; background: #fff; max-width: none; margin: 0; padding: 0; }
+h1 { font-size: 19pt; margin: 0 0 1pt; text-align: center; letter-spacing: 0.5pt; }
+h1 + p, h1 + p + p { text-align: center; margin: 0; }
+h2 { font-size: 10.5pt; text-transform: uppercase; border-bottom: 1px solid #333; margin: 7pt 0 3pt; padding-bottom: 1pt; }
+h3 { font-size: 10.5pt; margin: 5pt 0 0; }
+h3 + p { margin: 0 0 1pt; }
+ul { margin: 1pt 0; padding-left: 13pt; }
+li { margin: 0.5pt 0; }
+p { margin: 2pt 0; }
