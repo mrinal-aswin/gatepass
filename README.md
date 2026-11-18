@@ -27,7 +27,7 @@ LinkedIn changes later, it updates only what's affected and keeps everything you
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Resume +<br/>LinkedIn"] --> B["Research +<br/>5 reviewers"]
     B --> C["Your pack"]
     C --> D["Dashboard"]
