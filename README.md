@@ -1,14 +1,14 @@
 <sub>Contributing? Run `git config core.hooksPath .githooks` once after cloning, then read [CONTRIBUTING.md](CONTRIBUTING.md).</sub>
 
-# resume-pipeline
+# Gatepass
 
-**Your job search, run like a project.** Give Claude your resume and your LinkedIn profile. About
+**Get your resume through every hiring gate.** Your job search, run like a project. Give Claude your resume and your LinkedIn profile. About
 twenty minutes later you have your **pack**: everything you need to apply, and a dashboard that tells you
 what to do next.
 
 It works for your own search, or for a whole team: one pack per person, all in one folder.
 
-**[See the website](https://mrinal-aswin.github.io/resume-pipeline/)** for a tour.
+**[See the website](https://mrinal-aswin.github.io/gatepass/)** for a tour.
 
 ## What you get
 
@@ -62,11 +62,11 @@ Open the **Terminal** app:
 Paste these two lines, one at a time, pressing <kbd>Enter</kbd> after each:
 
 ```bash
-claude plugin marketplace add mrinal-aswin/resume-pipeline
+claude plugin marketplace add mrinal-aswin/gatepass
 ```
 
 ```bash
-claude plugin install resume-pipeline@resume-pipeline
+claude plugin install gatepass@gatepass
 ```
 
 Each line ends with a green tick and "Successfully added" or "Successfully installed".
@@ -98,7 +98,7 @@ Next time, just open Terminal and run the last two lines again.
 
 Type this to Claude, in plain words:
 
-> Check the resume-pipeline setup and help me install anything that's missing.
+> Check the gatepass setup and help me install anything that's missing.
 
 It checks for five things (listed under [What it needs](#what-it-needs)) and walks you through
 installing any that are missing. When everything is there, it says **Ready**. You can ignore a line that
@@ -262,7 +262,7 @@ attach the file instead.
 <summary><b>Claude doesn't seem to know about the plugin</b></summary>
 
 Close Claude Code and open it again; plugins load when it starts. To check that it's installed, run
-`claude plugin list` in Terminal and look for `resume-pipeline`.
+`claude plugin list` in Terminal and look for `gatepass`.
 </details>
 
 <details>
@@ -299,27 +299,43 @@ of the research and the five reviewers; updates use much less.
 To get the latest version, run this in Terminal:
 
 ```bash
-claude plugin update resume-pipeline@resume-pipeline
+claude plugin update gatepass@gatepass
 ```
 
 To remove it:
 
 ```bash
-claude plugin uninstall resume-pipeline@resume-pipeline
+claude plugin uninstall gatepass@gatepass
 ```
 
 Removing the plugin doesn't touch your packs. Your `people/` folder stays exactly as it was. What's new
 in each version is in the [changelog](CHANGELOG.md).
 
+### Coming from resume-pipeline?
+
+Gatepass used to be called resume-pipeline. Version 2.0 changed the name, so the old install can't update
+itself. Switch once, in Terminal:
+
+```bash
+claude plugin uninstall resume-pipeline@resume-pipeline
+claude plugin marketplace remove resume-pipeline
+claude plugin marketplace add mrinal-aswin/gatepass
+claude plugin install gatepass@gatepass
+```
+
+Your packs carry over unchanged. If a project's `.claude/settings.json` lists `resume-pipeline@resume-pipeline`
+under `enabledPlugins`, change it to `gatepass@gatepass`. If you set `RESUME_PIPELINE_CHROME`, it still works;
+the new name is `GATEPASS_CHROME`.
+
 ## Other ways to use it
 
-- **Without the plugin system:** copy `skills/resume-pipeline/` into a project's `.claude/skills/` folder.
-  To get the start-of-session reminder, also merge `skills/resume-pipeline/assets/session-start-hook.json`
+- **Without the plugin system:** copy `skills/gatepass/` into a project's `.claude/skills/` folder.
+  To get the start-of-session reminder, also merge `skills/gatepass/assets/session-start-hook.json`
   into that project's `.claude/settings.json`.
 - **On claude.ai or in the Claude desktop app (experimental):** run `tools/build-skill-zip.sh` and upload
-  `dist/resume-pipeline.zip` under Settings → Capabilities → Skills. Reviews and writing work there.
+  `dist/gatepass.zip` under Settings → Capabilities → Skills. Reviews and writing work there.
   Making PDFs needs the tools above, which only Claude Code on your own computer has.
-- **Try a copy without installing it:** `claude --plugin-dir /path/to/resume-pipeline`.
+- **Try a copy without installing it:** `claude --plugin-dir /path/to/gatepass`.
 
 ## License
 

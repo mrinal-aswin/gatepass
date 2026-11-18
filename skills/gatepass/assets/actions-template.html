@@ -422,7 +422,7 @@ button.quiet:hover { background: var(--accent-wash); border-color: transparent; 
 const DATA = /*__ACTIONS_DATA__*/null;
 (function () {
   "use strict";
-  const SCRIPTS = DATA.scripts || ".claude/skills/resume-pipeline/scripts";  // set at render: project or plugin install
+  const SCRIPTS = DATA.scripts || ".claude/skills/gatepass/scripts";  // set at render: project or plugin install
   const PY = (script) => `python3 -I "${SCRIPTS}/${script}"`;
   const STATUSES = ["open", "resolved", "ignored"];
   const LABEL = { open: "Open", resolved: "Resolved", ignored: "Ignored" };

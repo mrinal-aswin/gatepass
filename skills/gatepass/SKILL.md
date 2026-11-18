@@ -1,9 +1,9 @@
 ---
-name: resume-pipeline
+name: gatepass
 description: Job-search framework for one person, built on the hiring funnel (findable, ATS, recruiter shortlist, hiring manager, technical rounds, offer, background check). Reviews LinkedIn against the resume, researches live jobs and JD keywords, writes an ATS-safe one-page resume (DOCX + PDF), plus role-specific versions (frontend, backend, full stack) where the profile supports them, scores it, runs a lens review where independent reviewers (recruiter, hiring manager, technical interviewer, HR/background check, domain lead) each judge their gate, then builds a learning plan, a ChatGPT mock-interview prompt, cover letters and an action tracker. Updates re-run only what changed. Use whenever someone shares a resume, CV or LinkedIn profile, or says "update the resume", "X sent a new CV", "their LinkedIn changed", "refresh the job search", "review this like a recruiter", "prepare X for interviews", "make this ATS friendly", "write a cover letter for this job" or "help my teammate land a job", even for one piece.
 ---
 
-# Resume pipeline
+# Gatepass
 
 Eight stages turn a person's resume and LinkedIn profile into a job-search pack. A small script
 (`scripts/pipeline.py`) handles everything deterministic: storing inputs, deciding which stages

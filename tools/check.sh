@@ -4,7 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SKILL=skills/resume-pipeline
+SKILL=skills/gatepass
 fail=0
 say() { printf '%s\n' "$*"; }
 
@@ -19,7 +19,7 @@ done
 
 say "== Skill name matches its folder"
 name=$(sed -n 's/^name: *//p' "$SKILL/SKILL.md" | head -1)
-[ "$name" = "resume-pipeline" ] || { say "SKILL.md name is '$name', expected resume-pipeline"; fail=1; }
+[ "$name" = "gatepass" ] || { say "SKILL.md name is '$name', expected gatepass"; fail=1; }
 
 say "== Privacy guard"
 # No pack folders, trackers, documents or email addresses anywhere in the shipped files.

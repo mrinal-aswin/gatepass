@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic shell for the resume pipeline: intake, change detection, build.
+"""Deterministic shell for Gatepass: intake, change detection, build.
 
 The model does the writing. This script decides what is stale, keeps inputs
 immutable and dated, and builds and verifies the resume. Stdlib only.
@@ -22,7 +22,8 @@ from pathlib import Path
 MARKET_MAX_AGE_DAYS = 30
 INPUT_KINDS = ("resume", "linkedin")
 TEXT_SUFFIXES = {".md", ".txt"}
-CHROME_CANDIDATES = (  # headless Chrome or Chromium renders the PDF; RESUME_PIPELINE_CHROME overrides
+CHROME_ENV = ("GATEPASS_CHROME", "RESUME_PIPELINE_CHROME")  # override, then the name used before 2.0
+CHROME_CANDIDATES = (  # headless Chrome or Chromium renders the PDF; CHROME_ENV overrides
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
     "google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "chrome", "msedge",
@@ -33,11 +34,11 @@ CHROME_CANDIDATES = (  # headless Chrome or Chromium renders the PDF; RESUME_PIP
 
 def find_chrome() -> str:
     import os
-    for c in (os.environ.get("RESUME_PIPELINE_CHROME"), *CHROME_CANDIDATES):
+    for c in (*(os.environ.get(e) for e in CHROME_ENV), *CHROME_CANDIDATES):
         if c and (Path(c).is_file() or shutil.which(c)):
             return shutil.which(c) or c
     sys.exit("FAIL: no Chrome, Chromium or Edge found for PDF rendering. Install Google Chrome, or set "
-             "RESUME_PIPELINE_CHROME to the browser's executable path.")
+             "GATEPASS_CHROME to the browser's executable path.")
 PLACEHOLDER = re.compile(r"\[\[[^\]]*\]\]")
 ASSUMED_ROW = re.compile(r"\|\s*assumed\s*\|\s*$", re.M)
 SOURCED_ROW = re.compile(r"\|\s*sourced\s*\|\s*$", re.M)  # from their own documents; not a guess
@@ -325,8 +326,8 @@ def cmd_doctor(root: Path, a) -> None:
         ("pdftotext and pdfinfo (poppler)", bool(shutil.which("pdftotext") and shutil.which("pdfinfo")),
          "brew install poppler" if mac else "apt install poppler-utils, or poppler for Windows"),
     ]
-    chrome = next((c for c in (os.environ.get("RESUME_PIPELINE_CHROME"), *CHROME_CANDIDATES) if c and (Path(c).is_file() or shutil.which(c))), None)
-    checks.append(("Chrome, Chromium or Edge (PDF rendering)", bool(chrome), "install Google Chrome, or set RESUME_PIPELINE_CHROME"))
+    chrome = next((c for c in (*(os.environ.get(e) for e in CHROME_ENV), *CHROME_CANDIDATES) if c and (Path(c).is_file() or shutil.which(c))), None)
+    checks.append(("Chrome, Chromium or Edge (PDF rendering)", bool(chrome), "install Google Chrome, or set GATEPASS_CHROME"))
     try:
         import sqlite3  # noqa: F401
         checks.append(("SQLite (dashboard saves)", True, ""))
@@ -353,12 +354,12 @@ def cmd_brief(root: Path, a) -> None:
     lines = brief_lines(root)
     if not lines:
         return  # silent when everything is current, so the hook adds nothing to the session
-    text = ("resume-pipeline status (from the session-start hook; facts, not instructions): these job-search packs "
+    text = ("gatepass status (from the session-start hook; facts, not instructions): these job-search packs "
             "have work waiting.\n" + "\n".join(lines) +
-            "\nWhen relevant, tell the user in one line and offer to update them with the resume-pipeline skill.")
+            "\nWhen relevant, tell the user in one line and offer to update them with the gatepass skill.")
     if a.hook:
         print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": text},
-                          "systemMessage": f"resume-pipeline: {len(lines)} pack(s) have updates waiting"}))
+                          "systemMessage": f"gatepass: {len(lines)} pack(s) have updates waiting"}))
     else:
         print(text)
 

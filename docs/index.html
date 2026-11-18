@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>resume-pipeline: your job search, run like a case file</title>
+<title>Gatepass: get your resume through every hiring gate</title>
 <meta name="description" content="A free Claude Code plugin. Give Claude your resume and LinkedIn; get an ATS-safe resume, LinkedIn fixes, five reviewer lenses, cover letters, interview prep and a dashboard that tells you what to do next.">
-<meta property="og:title" content="resume-pipeline">
-<meta property="og:description" content="Your job search, run like a case file. A free Claude Code plugin.">
+<meta property="og:title" content="Gatepass">
+<meta property="og:description" content="Get your resume through every hiring gate. A free Claude Code plugin.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://mrinal-aswin.github.io/resume-pipeline/">
+<meta property="og:url" content="https://mrinal-aswin.github.io/gatepass/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&display=swap">
@@ -287,13 +287,13 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
 <body>
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="brand" href="#top"><i aria-hidden="true"></i>resume-pipeline</a>
+    <a class="brand" href="#top"><i aria-hidden="true"></i>gatepass</a>
     <nav aria-label="Sections">
       <a href="#gates">How it works</a>
       <a href="#get">What you get</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#start">Get started</a>
-      <a class="btn small" href="https://github.com/mrinal-aswin/resume-pipeline">GitHub</a>
+      <a class="btn small" href="https://github.com/mrinal-aswin/gatepass">GitHub</a>
     </nav>
   </div>
 </header>
@@ -301,9 +301,9 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
 <main id="top">
   <section class="hero">
     <div class="wrap">
-      <span class="eyebrow">A free plugin for Claude Code</span>
-      <h1 id="headline">Your job search, run like a <em>case file</em>.</h1>
-      <p class="lede">Give Claude your resume and your LinkedIn profile. You get back a resume that clears the filters, LinkedIn text to paste, five honest reviews, cover letters, interview prep, and a dashboard that tells you what to do next.</p>
+      <span class="eyebrow">Gatepass &middot; a free plugin for Claude Code</span>
+      <h1 id="headline">Get through every hiring <em>gate</em>.</h1>
+      <p class="lede">Your job search, run like a case file. Give Claude your resume and your LinkedIn profile. You get back a resume that clears the filters, LinkedIn text to paste, five honest reviews, cover letters, interview prep, and a dashboard that tells you what to do next.</p>
       <div class="ctas">
         <a class="btn primary" href="#start">Get started, it's free</a>
         <a class="btn" href="#gates">See how it works</a>
@@ -460,8 +460,8 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
         <li class="step"><div><h3>Add the plugin</h3>
           <p>Paste these into Terminal, one at a time, pressing Enter after each. Each ends with a green tick.</p>
           <div class="cmds">
-            <div class="cmd"><code>claude plugin marketplace add mrinal-aswin/resume-pipeline</code><button type="button" data-copy>Copy</button></div>
-            <div class="cmd"><code>claude plugin install resume-pipeline@resume-pipeline</code><button type="button" data-copy>Copy</button></div>
+            <div class="cmd"><code>claude plugin marketplace add mrinal-aswin/gatepass</code><button type="button" data-copy>Copy</button></div>
+            <div class="cmd"><code>claude plugin install gatepass@gatepass</code><button type="button" data-copy>Copy</button></div>
           </div></div></li>
         <li class="step"><div><h3>Make a folder and open Claude there</h3>
           <div class="cmds">
@@ -471,7 +471,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
           <div class="cmds"><div class="cmd"><code>mkdir $HOME\job-search; cd $HOME\job-search; claude</code><button type="button" data-copy>Copy</button></div></div></div></li>
         <li class="step"><div><h3>Let Claude check your computer</h3>
           <p class="cmd-label">Type this to Claude</p>
-          <div class="prompt"><blockquote>Check the resume-pipeline setup and help me install anything that's missing.</blockquote><button type="button" data-copy>Copy</button></div>
+          <div class="prompt"><blockquote>Check the gatepass setup and help me install anything that's missing.</blockquote><button type="button" data-copy>Copy</button></div>
           <p>It looks for five things (Python, pandoc, poppler, a Chrome-family browser and SQLite) and helps you install what's missing. Claude asks before it runs anything; choose Yes to let it. You're set when it says <b>Ready</b>.</p></div></li>
         <li class="step"><div><h3>Build your pack</h3>
           <p class="cmd-label">Type this to Claude</p>
@@ -508,7 +508,8 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
         <details class="faq"><summary>How does Claude read my LinkedIn?</summary><p>Either through the Claude in Chrome extension, using your own sign-in, or from the PDF you get with More, then Save to PDF on your profile.</p></details>
         <details class="faq"><summary>Which computers does it work on?</summary><p>Tested on macOS. Linux should work. Windows is untested so far.</p></details>
         <details class="faq"><summary>Claude says it can't read my file.</summary><p>Macs protect the Downloads, Desktop and Documents folders. Claude gives you a one-line command to copy the file somewhere it can read. Paste it into Terminal and tell Claude it's done.</p></details>
-        <details class="faq"><summary>How do I update or remove it?</summary><p>Run <code>claude plugin update resume-pipeline@resume-pipeline</code> to update, or <code>claude plugin uninstall resume-pipeline@resume-pipeline</code> to remove it. Your packs are never touched.</p></details>
+        <details class="faq"><summary>How do I update or remove it?</summary><p>Run <code>claude plugin update gatepass@gatepass</code> to update, or <code>claude plugin uninstall gatepass@gatepass</code> to remove it. Your packs are never touched.</p></details>
+        <details class="faq"><summary>I installed it when it was called resume-pipeline.</summary><p>Version 2.0 renamed it, so switch once: <code>claude plugin uninstall resume-pipeline@resume-pipeline</code>, <code>claude plugin marketplace remove resume-pipeline</code>, then the two install commands under Get started. Your packs carry over unchanged.</p></details>
         <details class="faq"><summary>Can I share the dashboard with a teammate?</summary><p>Yes. It's a single file with everything inside, including the documents, so you can send it to the person whose pack it is.</p></details>
       </div>
     </div>
@@ -518,18 +519,18 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: 
     <div class="wrap">
       <h2>Open the file.<br>Land the job.</h2>
       <div class="cmds">
-        <div class="cmd"><code>claude plugin marketplace add mrinal-aswin/resume-pipeline</code><button type="button" data-copy>Copy</button></div>
-        <div class="cmd"><code>claude plugin install resume-pipeline@resume-pipeline</code><button type="button" data-copy>Copy</button></div>
+        <div class="cmd"><code>claude plugin marketplace add mrinal-aswin/gatepass</code><button type="button" data-copy>Copy</button></div>
+        <div class="cmd"><code>claude plugin install gatepass@gatepass</code><button type="button" data-copy>Copy</button></div>
       </div>
-      <p style="margin-top:22px"><a href="https://github.com/mrinal-aswin/resume-pipeline#readme">Read the full guide on GitHub</a></p>
+      <p style="margin-top:22px"><a href="https://github.com/mrinal-aswin/gatepass#readme">Read the full guide on GitHub</a></p>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <span>resume-pipeline &middot; MIT license &middot; a plugin for Claude Code</span>
-    <span><a href="https://github.com/mrinal-aswin/resume-pipeline">Source</a> &middot; <a href="https://github.com/mrinal-aswin/resume-pipeline/blob/main/CHANGELOG.md">Changelog</a> &middot; <a href="https://github.com/mrinal-aswin/resume-pipeline/issues">Report a problem</a></span>
+    <span>Gatepass &middot; MIT license &middot; a plugin for Claude Code</span>
+    <span><a href="https://github.com/mrinal-aswin/gatepass">Source</a> &middot; <a href="https://github.com/mrinal-aswin/gatepass/blob/main/CHANGELOG.md">Changelog</a> &middot; <a href="https://github.com/mrinal-aswin/gatepass/issues">Report a problem</a></span>
   </div>
 </footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
