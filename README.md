@@ -3,10 +3,12 @@
 # resume-pipeline
 
 **Your job search, run like a project.** Give Claude your resume and your LinkedIn profile. About
-twenty minutes later you have everything you need to apply, and a dashboard that tells you what to do
-next.
+twenty minutes later you have your **pack**: everything you need to apply, and a dashboard that tells you
+what to do next.
 
-It works for your own search, or for a whole team: keep one pack per person, all in one folder.
+It works for your own search, or for a whole team: one pack per person, all in one folder.
+
+**[See the website](https://mrinal-aswin.github.io/resume-pipeline/)** for a tour.
 
 ## What you get
 
@@ -22,7 +24,9 @@ It works for your own search, or for a whole team: keep one pack per person, all
 
 **Nothing is made up.** Every line on your resume traces back to your own documents. Where something is
 missing, Claude either asks you or marks its best guess so you can confirm it. When your resume or
-LinkedIn changes later, it updates only what's affected and keeps everything you've already confirmed.
+LinkedIn changes later, it updates only what's affected and keeps everything you've already confirmed. If
+a new resume disagrees with something you confirmed, Claude asks which is true instead of overwriting it,
+and anything you rejected stays out.
 
 ## How it works
 
@@ -36,14 +40,16 @@ flowchart TD
 
 ## Get started
 
-You'll do this once. It takes about ten minutes, plus about twenty for your first pack.
+You'll do this once. Setting up takes about ten minutes; your first pack takes about twenty more.
 
 ### Step 1. Get Claude Code
 
 Claude Code is the version of Claude that can work with files on your computer. It needs a paid Claude
 plan (Pro, Max, Team or Enterprise) or an Anthropic Console account.
 
-Install it from **[claude.com/claude-code](https://claude.com/claude-code)** and sign in.
+Install it from **[claude.com/claude-code](https://claude.com/claude-code)**. Then open the Terminal app (see
+Step 2 for how), type `claude`, press <kbd>Enter</kbd>, and finish signing in in the browser window that
+opens. Type `/exit` to close it again when you're done.
 
 ### Step 2. Add this plugin
 
@@ -83,7 +89,10 @@ claude
 
 On Windows PowerShell, use `mkdir $HOME\job-search` and `cd $HOME\job-search` for the first two lines.
 
-Claude Code starts inside that folder. Next time, just open Terminal and run the last two lines again.
+Claude Code starts inside that folder. If it asks whether you trust this folder, choose **Yes**. You're
+ready when you see a box to type in.
+
+Next time, just open Terminal and run the last two lines again.
 
 ### Step 4. Let Claude check your computer
 
@@ -91,8 +100,12 @@ Type this to Claude, in plain words:
 
 > Check the resume-pipeline setup and help me install anything that's missing.
 
-It checks for four free tools (listed under [What it needs](#what-it-needs)) and walks you through
-installing any that are missing. When everything is there, it says **Ready**.
+It checks for five things (listed under [What it needs](#what-it-needs)) and walks you through
+installing any that are missing. When everything is there, it says **Ready**. You can ignore a line that
+starts with `note`.
+
+Claude asks before it runs anything on your computer. Read what it wants to do, and choose **Yes** to let
+it. On a new Mac, a window may ask to install "command line developer tools": click **Install**.
 
 ### Step 5. Build your first pack
 
@@ -100,8 +113,8 @@ Type:
 
 > Build my job-search pack.
 
-Then **attach your resume** to the chat: drag the file in, or use the paperclip. PDF, Word or text all
-work.
+Then **add your resume**: drag the file into the window. In Terminal this pastes the file's location;
+press <kbd>Enter</kbd>. PDF, Word or text all work.
 
 Claude asks a few questions, one at a time, usually with buttons to click:
 
@@ -117,7 +130,8 @@ Claude asks a few questions, one at a time, usually with buttons to click:
 Say **"go"** at any point and Claude carries on with what it has.
 
 Then it gets to work. Research and the five reviewers run at the same time, so the first pack takes about
-**10 to 20 minutes**. Later updates are much quicker.
+**twenty minutes**. Later updates are much quicker. It's done when Claude says your pack is ready and lists
+anything it still needs from you.
 
 ### Step 6. Open your dashboard
 
@@ -125,8 +139,8 @@ Type:
 
 > Start my dashboard.
 
-Claude starts it and gives you a link, usually **http://localhost:8765**. Open it in your browser. It runs
-only on your computer.
+Claude starts it and gives you a link, usually **http://127.0.0.1:8765**. Open it in your browser. It runs
+only on your computer, so keep Terminal open while you use it: closing it stops the dashboard.
 
 Start with **Do next** on the Overview tab, and work down the list.
 
@@ -136,8 +150,8 @@ Start with **Do next** on the Overview tab, and work down the list.
 |---|---|
 | **Overview** | Where you stand at each stage of hiring, from "can recruiters find me?" to "will I pass the background check?" Plus your **Do next** list and key numbers. |
 | **Actions** | Every improvement as a card: why it matters, a link to the exact page, text to copy, and step-by-step help. Mark each one **Resolved** or **Ignored** when you're done. Undo is there if you misclick. |
-| **Documents** | Download your resume, cover letters, learning plan and mock-interview prompt as PDF, Word or text. |
-| **Tailor to a job** | Paste a job ad and get a resume tailored to it in seconds. |
+| **Documents** | Download your resume, cover letters, learning plan and mock-interview prompt as PDF, Word or plain text (Markdown). |
+| **Tailor to a job** | Paste a job ad and get a resume tailored to it in seconds. Each one is kept with its ad, so you can tell which version you sent, and it's flagged if your main resume changes later. |
 | **Lenses** | What each of the five reviewers thought, and the problems two or more of them agreed on. |
 | **ATS** | How well your resume and LinkedIn match the keywords employers search for, and one-click copying of skills to add to LinkedIn. |
 | **Funnel** | Each week, log how many applications, replies and interviews you got. It tells you which stage is leaking. |
@@ -145,6 +159,9 @@ Start with **Do next** on the Overview tab, and work down the list.
 
 Everything you tick is saved straight away. If you open the dashboard file directly instead of through
 Claude, it remembers your clicks in that browser and gives you a button to save them properly later.
+
+The dashboard is a single file with everything inside, including the documents, so you can send it to the
+person whose pack it is.
 
 ## What to say to Claude
 
@@ -154,6 +171,7 @@ Plain words work. Some examples:
 |---|---|
 | Update your resume | "I have a new resume." *(attach it)* |
 | Refresh after editing LinkedIn | "My LinkedIn changed." |
+| Check your LinkedIn fixes went live | "I've made the LinkedIn changes." *(Claude re-reads your profile and checks each one)* |
 | Apply for a specific job | "Tailor my resume to this job:" *(paste the ad)* |
 | Get a cover letter for it | "Write a cover letter for this job." |
 | Apply to more than one kind of role | "Which roles does my profile support? Make a resume for each." |
@@ -193,20 +211,23 @@ job-search/
         └── CHANGELOG.md     what changed each time Claude updated the pack
 ```
 
+You can also drop files into a `raw/` folder next to `people/` instead of adding them in the chat. Claude
+files them into the right place and offers to empty `raw/` afterwards.
+
 ## Privacy
 
 A pack holds personal information: contact details, work history, and the decisions you made.
 
 - Everything stays on your computer. The dashboard runs only on your machine.
 - Build a pack for someone else only with their agreement.
-- Don't upload the `people/` folder anywhere public. If you keep your job-search folder in git, add
-  `people/` and `raw/` to its `.gitignore`.
+- Don't upload the `people/` folder anywhere public. *(For developers: if your job-search folder is a git
+  repository, add `people/` and `raw/` to its `.gitignore`.)*
 - This plugin contains no personal data, and its automatic checks refuse any that's added by mistake.
 
 ## What it needs
 
-Four free tools. Claude checks for them in [Step 4](#step-4-let-claude-check-your-computer) and helps you
-install any that are missing.
+Five things, all free. Claude checks for them in [Step 4](#step-4-let-claude-check-your-computer) and helps
+you install any that are missing.
 
 | Tool | What it does | Mac | Windows / Linux |
 |---|---|---|---|
@@ -214,9 +235,10 @@ install any that are missing.
 | pandoc | makes the Word documents | `brew install pandoc` | [pandoc.org](https://pandoc.org/installing.html) |
 | poppler | reads PDFs the way screening software does | `brew install poppler` | `apt install poppler-utils` |
 | Chrome, Chromium or Edge | turns documents into PDFs | [google.com/chrome](https://www.google.com/chrome/) | usually already there |
+| SQLite | saves your dashboard clicks | built into Python | built into Python |
 
-The Mac commands use [Homebrew](https://brew.sh). It's tested on macOS; Linux should work; Windows is
-untested.
+The Mac commands use [Homebrew](https://brew.sh); if you don't have it, Claude can install it for you.
+It's tested on macOS; Linux should work; Windows is untested.
 
 ## If something goes wrong
 
