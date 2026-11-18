@@ -10,17 +10,15 @@ It works for your own search, or for a whole team: keep one pack per person, all
 
 ## What you get
 
-| | |
-|---|---|
-| **A resume that gets through the filters** | One page, built to survive the automatic screening (ATS) that most companies run before a person reads anything. PDF to upload, Word for portals that want it. |
-| **Resumes for each kind of role** | Applying to frontend *and* backend jobs? You get a resume for each role your experience genuinely supports. Same facts, different emphasis. |
-| **A resume tailored to one job** | Paste a job ad and get a version reordered for it in seconds, plus an honest list of what the ad asks for that you can't claim. |
-| **LinkedIn fixes, ready to paste** | A new headline, an About section and experience text, each with the steps to apply it, checked against your resume so the two never disagree. |
-| **Five reviewers, before the real ones** | A recruiter, a hiring manager, a technical interviewer, an HR/background checker and a domain lead each judge your materials separately, and say what would stop them. |
-| **Live job research** | Real current listings for your target roles and cities, and the keywords those ads keep asking for. |
-| **Cover letters** | A main letter and a short version for emails and LinkedIn messages, plus a tailored letter for any job on request. |
-| **Interview preparation** | A six-week plan, a bank of stories to tell, and a ready-made prompt that turns ChatGPT into a mock interviewer. |
-| **A dashboard to work from** | Every improvement as a card you can tick off, your scores, your documents, and a weekly tracker that tells you where applications are getting stuck. |
+- **A resume that gets through the filters.** One page, built to survive the automatic screening (ATS) that most companies run before a person reads anything. PDF to upload, Word for portals that want it.
+- **Resumes for each kind of role.** Applying to frontend *and* backend jobs? You get a resume for each role your experience genuinely supports. Same facts, different emphasis.
+- **A resume tailored to one job.** Paste a job ad and get a version reordered for it in seconds, plus an honest list of what the ad asks for that you can't claim.
+- **LinkedIn fixes, ready to paste.** A new headline, an About section and experience text, each with the steps to apply it, checked against your resume so the two never disagree.
+- **Five reviewers, before the real ones.** A recruiter, a hiring manager, a technical interviewer, an HR/background checker and a domain lead each judge your materials separately, and say what would stop them.
+- **Live job research.** Real current listings for your target roles and cities, and the keywords those ads keep asking for.
+- **Cover letters.** A main letter and a short version for emails and LinkedIn messages, plus a tailored letter for any job on request.
+- **Interview preparation.** A six-week plan, a bank of stories to tell, and a ready-made prompt that turns ChatGPT into a mock interviewer.
+- **A dashboard to work from.** Every improvement as a card you can tick off, your scores, your documents, and a weekly tracker that tells you where applications are getting stuck.
 
 **Nothing is made up.** Every line on your resume traces back to your own documents. Where something is
 missing, Claude either asks you or marks its best guess so you can confirm it. When your resume or
@@ -30,10 +28,10 @@ LinkedIn changes later, it updates only what's affected and keeps everything you
 
 ```mermaid
 flowchart LR
-    A["Your resume<br/>and LinkedIn"] --> B["Claude researches<br/>and reviews"]
-    B --> C["Your pack:<br/>resume, letters,<br/>LinkedIn text, prep"]
-    C --> D["Dashboard:<br/>do the next thing,<br/>tick it off"]
-    D -- "something changes" --> B
+    A["Resume +<br/>LinkedIn"] --> B["Research +<br/>5 reviewers"]
+    B --> C["Your pack"]
+    C --> D["Dashboard"]
+    D -- "something<br/>changes" --> B
 ```
 
 ## Get started
