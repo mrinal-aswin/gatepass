@@ -32,10 +32,10 @@ bash tools/check.sh
 2. After merging, tag the release from `main`:
 
    ```bash
-   git tag -a v1.2.0 -m "resume-pipeline 1.2.0" && git push origin v1.2.0
+   git tag -a v2.1.0 -m "gatepass 2.1.0" && git push origin v2.1.0
    ```
 
-Users who want a fixed version can add the marketplace at a tag: `mrinal-aswin/resume-pipeline#v1.0.0`.
+Users who want a fixed version can add the marketplace at a tag: `mrinal-aswin/gatepass#v2.0.0`.
 
 ## Repository layout
 
@@ -43,7 +43,7 @@ Users who want a fixed version can add the marketplace at a tag: `mrinal-aswin/r
 .claude-plugin/plugin.json        plugin manifest (name, version, license)
 .claude-plugin/marketplace.json   makes this repository installable as a marketplace
 hooks/hooks.json                  start-of-session note about packs with work waiting
-skills/resume-pipeline/           the skill: SKILL.md, scripts/, references/, assets/
+skills/gatepass/           the skill: SKILL.md, scripts/, references/, assets/
 tools/check.sh                    validation, Python compile, JSON and privacy checks
 tools/build-skill-zip.sh          builds the claude.ai upload
 .githooks/pre-push                refuses direct pushes to main

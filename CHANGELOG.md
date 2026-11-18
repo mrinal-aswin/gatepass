@@ -2,6 +2,15 @@
 
 All notable changes to this plugin. Versions follow `.claude-plugin/plugin.json`.
 
+## 2.0.0 (2026-11-18)
+
+- **Renamed to Gatepass.** The plugin, marketplace and skill are now `gatepass` (install with
+  `gatepass@gatepass`, run with `/gatepass`), and the repository is `mrinal-aswin/gatepass`. The old install
+  can't update itself across the rename: uninstall `resume-pipeline@resume-pipeline`, remove the
+  `resume-pipeline` marketplace, then add `mrinal-aswin/gatepass` and install `gatepass@gatepass`. Packs need no
+  changes.
+- `GATEPASS_CHROME` sets the browser used for PDFs; `RESUME_PIPELINE_CHROME` still works.
+
 ## 1.0.2 (2026-11-18)
 
 - The setup check (`doctor`) says the session-start hook is included when it runs from the plugin, instead of
