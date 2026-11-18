@@ -334,11 +334,17 @@ def cmd_doctor(root: Path, a) -> None:
         checks.append(("SQLite (dashboard saves)", False, "use a Python build that includes sqlite3"))
     hook = root / ".claude" / "settings.json"
     has_hook = hook.exists() and "brief --hook" in hook.read_text()
+    # Installed as a plugin, the hook ships with it (<plugin>/hooks/hooks.json): nothing to merge, and merging would run it twice.
+    plugin_hooks = Path(__file__).resolve().parents[3] / "hooks" / "hooks.json"
+    from_plugin = plugin_hooks.is_file() and "brief --hook" in plugin_hooks.read_text()
     missing = 0
     for name, ok, fix in checks:
         missing += not ok
         print(f"{'ok     ' if ok else 'MISSING'} {name}" + ("" if ok else f"  ->  {fix}"))
-    print(f"{'ok     ' if has_hook else 'note   '} session-start hook" + ("" if has_hook else "  ->  merge assets/session-start-hook.json into .claude/settings.json (optional)"))
+    if from_plugin:
+        print("ok      session-start hook (included with the plugin)")
+    else:
+        print(f"{'ok     ' if has_hook else 'note   '} session-start hook" + ("" if has_hook else "  ->  merge assets/session-start-hook.json into .claude/settings.json (optional)"))
     print("Ready." if not missing else f"{missing} required tool(s) missing.")
     sys.exit(1 if missing else 0)
 

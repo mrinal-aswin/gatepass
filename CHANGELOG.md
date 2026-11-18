@@ -2,6 +2,11 @@
 
 All notable changes to this plugin. Versions follow `.claude-plugin/plugin.json`.
 
+## 1.0.2 (2026-11-18)
+
+- The setup check (`doctor`) says the session-start hook is included when it runs from the plugin, instead of
+  asking you to add one (which would make it run twice).
+
 ## 1.0.1 (2026-11-18)
 
 - Licensed under MIT (`LICENSE`, and `license` in `plugin.json`).
