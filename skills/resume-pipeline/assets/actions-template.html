@@ -104,7 +104,7 @@ h2.sec { font: 700 19px/1.2 var(--f-display); letter-spacing: -.01em; margin: 34
 code, .cmd { font: 500 12.5px var(--f-mono); background: var(--tint); padding: 1px 5px; border-radius: 5px; word-break: break-word; }
 
 /* Pipeline of gates: the page's one bold element */
-.pipeline { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0; position: relative; }
+.pipeline { list-style: none; margin: 6px 0 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; position: relative; }
 .pipeline::before { content: ""; position: absolute; left: 6%; right: 6%; top: 21px; height: 2px; background: var(--rule); }
 .pipeline > li { display: flex; min-width: 0; }
 .stage { position: relative; width: 100%; display: grid; justify-items: center; align-content: start; text-align: center; gap: 6px; padding: 0 4px 6px; background: none; border: 0; border-radius: var(--r); cursor: pointer; font: inherit; color: inherit; }
@@ -120,7 +120,7 @@ code, .cmd { font: 500 12.5px var(--f-mono); background: var(--tint); padding: 1
 .pipe-scroll { overflow-x: auto; scrollbar-width: none; padding-top: 2px; }
 .pipe-scroll::-webkit-scrollbar { display: none; }
 @media (max-width: 860px) {
-  .pipeline { grid-template-columns: repeat(8, 96px); width: max-content; scroll-snap-type: x proximity; }
+  .pipeline { grid-auto-columns: 96px; width: max-content; scroll-snap-type: x proximity; }
   .pipeline::before { left: 48px; right: 48px; }
   .pipe-scroll { margin-inline: -16px; padding-inline: 16px; mask-image: linear-gradient(to right, #000 88%, transparent); }
 }

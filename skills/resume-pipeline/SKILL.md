@@ -327,5 +327,6 @@ a background check.
 
 `pipeline.py doctor` (fix anything MISSING before starting; it says how) → intake (step 1) → `init` → fill `target.json` → intake resume → capture and intake LinkedIn → run all eight stages
 in order (the lens review after the resume, cover letters after the mock interview) (`status` will list them all as `never run`) → `build` → `actions.py render` → `mark` each
-stage → changelog → report. Point the user at `outputs/actions.html` as the place to work from. On a first run the output is usually best delivered with defaults plus a ledger, since
+stage → changelog → report. Point the user at `outputs/actions.html` as the place to work from, and tell them to say
+"Start my dashboard" to open it with saving (you then run `actions.py serve`); never ask them to type a script command. On a first run the output is usually best delivered with defaults plus a ledger, since
 the person can answer the ledger questions faster than an open questionnaire.
