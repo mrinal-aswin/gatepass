@@ -2,6 +2,14 @@
 
 All notable changes to this plugin. Versions follow `.claude-plugin/plugin.json`.
 
+## 1.0.2 (2026-11-18)
+
+- The setup check (`doctor`) says the session-start hook is included when it runs from the plugin, instead of
+  asking you to add one (which would make it run twice).
+- The dashboard's hiring-gate strip fits any number of gates; a review that scores G0 (Positioning) no longer
+  wraps G8 onto its own row.
+- After a first pack, Claude tells you to say "Start my dashboard" rather than to run a script.
+
 ## 1.0.1 (2026-11-18)
 
 - Licensed under MIT (`LICENSE`, and `license` in `plugin.json`).

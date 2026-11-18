@@ -1,6 +1,6 @@
 {
   "name": "resume-pipeline",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Job-search packs built on the hiring funnel: LinkedIn review, live job research, an ATS-safe resume (PDF and Word), role-specific and job-tailored resumes, five independent reviewer lenses, cover letters, a learning plan, a mock-interview prompt and a dashboard to work from. Updates re-run only what changed.",
   "author": { "name": "Mrinal Aswin" },
   "license": "MIT",
